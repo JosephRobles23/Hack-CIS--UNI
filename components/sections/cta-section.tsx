@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, MessageCircle } from "lucide-react"
 import GradientText from "@/components/gradient-text"
 import NeonButton from "@/components/neon-button"
 
@@ -26,9 +26,12 @@ export default function CTASection() {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </NeonButton>
             </Link>
-            <NeonButton variant="secondary" size="lg">
-              Descargar Info
-            </NeonButton>
+            <a href="https://chat.whatsapp.com/KjuBCFP0GLq8D622MW59A3?mode=ems_copy_c" target="_blank" rel="noopener noreferrer">
+              <NeonButton variant="secondary" size="lg">
+                <MessageCircle className="mr-2 h-5 w-5" />
+                Grupo de WhatsApp
+              </NeonButton>
+            </a>
           </div>
 
           <div className="text-sm text-gray-500">Registro gratuito • Cupos limitados • Solo 500 participantes</div>

@@ -43,10 +43,12 @@ export default function HeroSection() {
               Registrarse
             </NeonButton>
           </Link>
-          <NeonButton variant="outline" size="lg">
-            <FileText className="mr-2 h-5 w-5" />
-            Bases
-          </NeonButton>
+          <a href="https://drive.google.com/file/d/1-OHclkT6rA3gIx2RdBWIMydWtqRQy9J9/view?usp=sharing" target="_blank" rel="noopener noreferrer">
+            <NeonButton variant="outline" size="lg">
+              <FileText className="mr-2 h-5 w-5" />
+              Bases
+            </NeonButton>
+          </a>
         </div>
 
         {/* Stats with Countdown and Hacker Counter */}

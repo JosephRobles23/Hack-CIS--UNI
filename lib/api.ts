@@ -1,4 +1,6 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_URL_BACKEND_HACK_CIS || ''
+import { toast } from "@/hooks/use-toast"
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_URL_BACKEND_HACK_CIS || 'https://hack-cis-uni-backend.onrender.com/api/v1/'
 
 // Tipos para las respuestas de la API
 export interface University {
@@ -36,6 +38,11 @@ export async function searchUniversities(search: string): Promise<University[]> 
     
     if (!response.ok) {
       console.error('Response not OK:', response.status, response.statusText)
+      toast({
+        title: "Error al buscar universidades",
+        description: `Error ${response.status}: ${response.statusText}`,
+        variant: "destructive",
+      })
       return []
     }
 
@@ -48,6 +55,11 @@ export async function searchUniversities(search: string): Promise<University[]> 
     } catch (parseError) {
       console.error('Error parsing JSON:', parseError)
       console.error('Response text was:', text)
+      toast({
+        title: "Error al procesar respuesta",
+        description: "La respuesta del servidor no es válida",
+        variant: "destructive",
+      })
       return []
     }
     
@@ -57,9 +69,19 @@ export async function searchUniversities(search: string): Promise<University[]> 
     }
     
     console.error('Error al buscar universidades:', result.message)
+    toast({
+      title: "Error al buscar universidades",
+      description: result.message || "Error desconocido",
+      variant: "destructive",
+    })
     return []
   } catch (error) {
     console.error('Error en la búsqueda de universidades:', error)
+    toast({
+      title: "Error de conexión",
+      description: "No se pudo conectar con el servidor",
+      variant: "destructive",
+    })
     return []
   }
 }
@@ -78,13 +100,27 @@ export async function createUniversity(name: string, initial?: string): Promise<
     const result: ApiResponse<University> = await response.json()
     
     if (result.success) {
+      toast({
+        title: "Universidad creada",
+        description: `${result.data.name} se ha agregado exitosamente`,
+      })
       return result.data
     }
     
     console.error('Error al crear universidad:', result.message)
+    toast({
+      title: "Error al crear universidad",
+      description: result.message || "Error desconocido",
+      variant: "destructive",
+    })
     return null
   } catch (error) {
     console.error('Error al crear universidad:', error)
+    toast({
+      title: "Error de conexión",
+      description: "No se pudo crear la universidad",
+      variant: "destructive",
+    })
     return null
   }
 }
@@ -100,9 +136,19 @@ export async function searchExpertise(search: string): Promise<Expertise[]> {
     }
     
     console.error('Error al buscar expertise:', result.message)
+    toast({
+      title: "Error al buscar especialización",
+      description: result.message || "Error desconocido",
+      variant: "destructive",
+    })
     return []
   } catch (error) {
     console.error('Error en la búsqueda de expertise:', error)
+    toast({
+      title: "Error de conexión",
+      description: "No se pudo buscar especializaciones",
+      variant: "destructive",
+    })
     return []
   }
 }
@@ -120,6 +166,11 @@ export async function getExistingTeams(): Promise<Team[]> {
     
     if (!response.ok) {
       console.error('Response not OK:', response.status, response.statusText)
+      toast({
+        title: "Error al obtener equipos",
+        description: `Error ${response.status}: ${response.statusText}`,
+        variant: "destructive",
+      })
       return []
     }
 
@@ -132,6 +183,11 @@ export async function getExistingTeams(): Promise<Team[]> {
     } catch (parseError) {
       console.error('Error parsing JSON:', parseError)
       console.error('Response text was:', text)
+      toast({
+        title: "Error al procesar respuesta",
+        description: "La respuesta del servidor no es válida",
+        variant: "destructive",
+      })
       return []
     }
     
@@ -141,9 +197,19 @@ export async function getExistingTeams(): Promise<Team[]> {
     }
     
     console.error('Error al obtener equipos:', result.message)
+    toast({
+      title: "Error al obtener equipos",
+      description: result.message || "Error desconocido",
+      variant: "destructive",
+    })
     return []
   } catch (error) {
     console.error('Error al obtener equipos:', error)
+    toast({
+      title: "Error de conexión",
+      description: "No se pudo obtener la lista de equipos",
+      variant: "destructive",
+    })
     return []
   }
 }

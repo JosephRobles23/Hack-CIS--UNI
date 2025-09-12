@@ -10,6 +10,7 @@ import GradientText from "@/components/gradient-text"
 import SearchableSelect from "@/components/searchable-select"
 import SuccessModal from "@/components/success-modal"
 import { searchUniversities, searchExpertise, createUniversity, getExistingTeams, University, Expertise, Team } from "@/lib/api"
+import { toast } from "@/hooks/use-toast"
 
 interface Question {
   id: string
@@ -261,6 +262,16 @@ export default function RegisterPage() {
       // Mapear las respuestas del formulario al formato de la API
       const isCreatingNewTeam = answers.teamChoice === 'Crear nuevo equipo'
       
+      // Mapear niveles de español a inglés
+      const levelMapping: Record<string, string> = {
+        'Principiante': 'beginner',
+        'Intermedio': 'intermediate', 
+        'Avanzado': 'advanced',
+        'Experto': 'expert'
+      }
+      
+      const mappedLevel = levelMapping[answers.experience] || 'beginner'
+      
       const registrationData = isCreatingNewTeam ? {
         name: answers.name || '',
         lastname: answers.lastname || '',
@@ -268,7 +279,7 @@ export default function RegisterPage() {
         email: answers.email || '',
         linkedin: answers.linkedin || '',
         github: answers.github || '',
-        level: answers.experience as 'Principiante' | 'Intermedio' | 'Avanzado' | 'Experto',
+        level: mappedLevel,
         education_id: selectedUniversity?.id || '',
         expertise_id: selectedExpertise?.id || '',
         team_create: true,
@@ -281,7 +292,7 @@ export default function RegisterPage() {
         email: answers.email || '',
         linkedin: answers.linkedin || '',
         github: answers.github || '',
-        level: answers.experience as 'Principiante' | 'Intermedio' | 'Avanzado' | 'Experto',
+        level: mappedLevel,
         education_id: selectedUniversity?.id || '',
         expertise_id: selectedExpertise?.id || '',
         team_create: false,
@@ -289,7 +300,8 @@ export default function RegisterPage() {
       }
 
       // Llamar a la API
-      const response = await fetch('/api/hacker', {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_URL_BACKEND_HACK_CIS || 'https://hack-cis-uni-backend.onrender.com/api/v1/'
+      const response = await fetch(`${API_BASE_URL}hacker/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -301,14 +313,27 @@ export default function RegisterPage() {
 
       if (result.success) {
         console.log("Registro completado exitosamente:", result.data)
+        toast({
+          title: "¡Registro exitoso!",
+          description: "Te has registrado correctamente en Hack[CIS] 2025",
+        })
         setShowSuccessModal(true)
       } else {
         console.error("Error en el registro:", result.message, result.errors)
-        // Manejar errores de validación
+        toast({
+          title: "Error en el registro",
+          description: result.message || "Error al enviar el registro. Por favor, intenta nuevamente.",
+          variant: "destructive",
+        })
         setFieldError("Error al enviar el registro. Por favor, intenta nuevamente.")
       }
     } catch (error) {
       console.error("Error al enviar el registro:", error)
+      toast({
+        title: "Error de conexión",
+        description: "No se pudo enviar el registro. Verifica tu conexión a internet.",
+        variant: "destructive",
+      })
     } finally {
       setIsSubmitting(false)
     }
@@ -450,11 +475,11 @@ export default function RegisterPage() {
                   <select
                     value={answers[currentQuestion.id] || ""}
                     onChange={(e) => handleInputChange(e.target.value)}
-                    className="w-full max-w-lg mx-auto bg-gray-900/50 border border-gray-700 rounded-lg px-6 py-4 text-white text-lg focus:border-cyan-400 focus:outline-none transition-colors"
+                    className="w-full max-w-lg mx-auto bg-gray-900/50 border border-gray-700 rounded-lg px-6 py-4 text-white text-lg focus:border-cyan-400 focus:outline-none transition-colors [&>option]:bg-gray-900 [&>option]:text-white [&>option:checked]:bg-cyan-600"
                   >
-                    <option value="">{currentQuestion.placeholder}</option>
+                    <option value="" className="bg-gray-900 text-gray-400">{currentQuestion.placeholder}</option>
                     {currentQuestion.options?.map((option) => (
-                      <option key={option} value={option}>
+                      <option key={option} value={option} className="bg-gray-900 text-white hover:bg-gray-800">
                         {option}
                       </option>
                     ))}

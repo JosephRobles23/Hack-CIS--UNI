@@ -7,6 +7,7 @@ import { ArrowRight, ArrowLeft } from "lucide-react"
 import TypewriterText from "@/components/typewriter-text"
 import FloatingParticles from "@/components/floating-particles"
 import GradientText from "@/components/gradient-text"
+import { toast } from "@/hooks/use-toast"
 
 interface Question {
   id: string
@@ -120,12 +121,70 @@ export default function SponsorsPage() {
 
   const handleSubmit = async () => {
     setIsSubmitting(true)
-    // Simular envío
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    setIsSubmitting(false)
-    // Aquí podrías enviar los datos a tu backend
-    console.log("Registro de patrocinador completado:", answers)
-    // Redirigir o mostrar mensaje de éxito
+    
+    try {
+      // Mapear planes de texto descriptivo a valores simples
+      const planMapping: Record<string, string> = {
+        'Silver - Aliado Inicial (S/ 300)': 'silver',
+        'Golden - Aliado Formador (S/ 450)': 'gold', 
+        'Diamond - Hiring Ally (S/ 600)': 'diamond'
+      }
+      
+      const mappedPlan = planMapping[answers.plan] || 'gold'
+      
+      // Mapear las respuestas del formulario al formato de la API
+      const sponsorData = {
+        name: answers.name || '',
+        email: answers.email || '',
+        contact_name: answers.contact_name || '',
+        contact_lastname: answers.contact_lastname || '',
+        contact_phone: answers.contact_phone || '',
+        linkedin: answers.linkedin || '',
+        instagram: answers.instagram || '',
+        facebook: answers.facebook || '',
+        plan: mappedPlan
+      }
+
+      console.log("Datos del patrocinador a enviar:", sponsorData)
+
+      // Llamar a la API
+      const API_BASE_URL = process.env.NEXT_PUBLIC_URL_BACKEND_HACK_CIS || 'https://hack-cis-uni-backend.onrender.com/api/v1/'
+      const response = await fetch(`${API_BASE_URL}sponsor/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sponsorData),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        console.log("Registro de patrocinador completado exitosamente:", result.data)
+        toast({
+          title: "¡Registro de patrocinador exitoso!",
+          description: "Nos pondremos en contacto contigo pronto",
+        })
+        
+        // Redirigir o mostrar mensaje de éxito
+      } else {
+        console.error("Error en el registro de patrocinador:", result.message, result.errors)
+        toast({
+          title: "Error en el registro",
+          description: result.message || "Error al enviar el registro. Por favor, intenta nuevamente.",
+          variant: "destructive",
+        })
+      }
+    } catch (error) {
+      console.error("Error al enviar registro de patrocinador:", error)
+      toast({
+        title: "Error de conexión",
+        description: "No se pudo enviar el registro. Verifica tu conexión a internet.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleInputChange = (value: string) => {
@@ -216,11 +275,11 @@ export default function SponsorsPage() {
                   <select
                     value={answers[currentQuestion.id] || ""}
                     onChange={(e) => handleInputChange(e.target.value)}
-                    className="w-full max-w-lg mx-auto bg-gray-900/50 border border-gray-700 rounded-lg px-6 py-4 text-white text-lg focus:border-yellow-400 focus:outline-none transition-colors"
+                    className="w-full max-w-lg mx-auto bg-gray-900/50 border border-gray-700 rounded-lg px-6 py-4 text-white text-lg focus:border-yellow-400 focus:outline-none transition-colors [&>option]:bg-gray-900 [&>option]:text-white [&>option:checked]:bg-yellow-600"
                   >
-                    <option value="">{currentQuestion.placeholder}</option>
+                    <option value="" className="bg-gray-900 text-gray-400">{currentQuestion.placeholder}</option>
                     {currentQuestion.options?.map((option) => (
-                      <option key={option} value={option}>
+                      <option key={option} value={option} className="bg-gray-900 text-white hover:bg-gray-800">
                         {option}
                       </option>
                     ))}

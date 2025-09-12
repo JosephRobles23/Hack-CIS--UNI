@@ -1,6 +1,7 @@
 "use client"
 
 import FloatingParticles from "@/components/floating-particles"
+import SplineScene from "@/components/spline-scene"
 import Navigation from "@/components/sections/navigation"
 import HeroSection from "@/components/sections/hero-section"
 import SponsorsSection from "@/components/sections/sponsors-section"
@@ -18,6 +19,7 @@ export default function HackCISMinimal() {
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
       <FloatingParticles />
+      <SplineScene />
       <Navigation />
       <HeroSection />
       <SponsorsSection />

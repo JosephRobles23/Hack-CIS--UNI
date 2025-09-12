@@ -39,7 +39,7 @@ export default function Footer() {
         >
           Eduardo
         </a>
-        {" • "}
+        {/* {" • "}
         inspiration from{" "}
         <a
           href="https://www.colombiatechfest.ai-hackathon.co/"
@@ -48,7 +48,7 @@ export default function Footer() {
           className="hover:text-gray-300 transition-colors underline cursor-pointer"
         >
           ai-hackathon.com
-        </a>
+        </a> */}
       </p>
     </footer>
   );

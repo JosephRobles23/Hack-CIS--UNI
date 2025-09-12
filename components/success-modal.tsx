@@ -27,8 +27,7 @@ export default function SuccessModal({ isOpen, onClose, participantName }: Succe
 
   const handleWhatsAppClick = () => {
     // Enlace al grupo de WhatsApp de la hackathon
-    // Reemplaza este enlace con el enlace real del grupo de WhatsApp
-    window.open("https://chat.whatsapp.com/ENLACE_DEL_GRUPO_HACKATHON", "_blank")
+    window.open("https://chat.whatsapp.com/KjuBCFP0GLq8D622MW59A3?mode=ems_copy_c", "_blank")
   }
 
   const handleGoHome = () => {
