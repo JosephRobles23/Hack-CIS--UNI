@@ -9,7 +9,7 @@ import TypewriterText from "@/components/typewriter-text"
 
 export default function HeroSection() {
   return (
-    <section className="relative z-10 min-h-screen flex items-start justify-center px-6 mt-4">
+    <section className="relative z-10 min-h-screen flex items-start justify-center px-6 mt-4 sm: mb-8">
       <div className="max-w-4xl mx-auto text-center space-y-12">
         <div className="space-y-6">
           <div className="text-sm uppercase tracking-widest text-gray-500">
