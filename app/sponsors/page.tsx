@@ -8,6 +8,7 @@ import TypewriterText from "@/components/typewriter-text"
 import FloatingParticles from "@/components/floating-particles"
 import GradientText from "@/components/gradient-text"
 import { toast } from "@/hooks/use-toast"
+import SponsorSuccessModal from "@/components/sponsor-success-modal"
 
 interface Question {
   id: string
@@ -100,6 +101,7 @@ export default function SponsorsPage() {
   const [answers, setAnswers] = useState<Record<string, string>>({})
   const [showInput, setShowInput] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
 
   const currentQuestion = questions[currentStep]
 
@@ -157,21 +159,25 @@ export default function SponsorsPage() {
         body: JSON.stringify(sponsorData),
       })
 
-      const result = await response.json()
-
-      if (result.success) {
-        console.log("Registro de patrocinador completado exitosamente:", result.data)
-        toast({
-          title: "¡Registro de patrocinador exitoso!",
-          description: "Nos pondremos en contacto contigo pronto",
-        })
-        
-        // Redirigir o mostrar mensaje de éxito
+      // Verificar si la respuesta fue exitosa basándose en el status code
+      if (response.ok) {
+        // Status 200-299 indica éxito
+        console.log("Registro de patrocinador completado exitosamente")
+        setShowSuccessModal(true)
       } else {
-        console.error("Error en el registro de patrocinador:", result.message, result.errors)
+        // Intentar obtener el mensaje de error del response
+        let errorMessage = "Error al enviar el registro. Por favor, intenta nuevamente."
+        try {
+          const result = await response.json()
+          errorMessage = result.message || errorMessage
+        } catch (e) {
+          // Si no se puede parsear el JSON, usar mensaje por defecto
+        }
+        
+        console.error("Error en el registro de patrocinador:", response.status, errorMessage)
         toast({
           title: "Error en el registro",
-          description: result.message || "Error al enviar el registro. Por favor, intenta nuevamente.",
+          description: errorMessage,
           variant: "destructive",
         })
       }
@@ -246,7 +252,7 @@ export default function SponsorsPage() {
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-start p-8">
         <div className="max-w-4xl w-full space-y-12">
           {/* Progress indicator */}
-          <div className="flex justify-center space-x-2 mb-8">
+          <div className="flex justify-center space-x-2 mb-4">
             {questions.map((_, index) => (
               <div
                 key={index}
@@ -258,7 +264,7 @@ export default function SponsorsPage() {
 
           {/* Question */}
           <div className="text-center space-y-8">
-            <h1 className="text-4xl md:text-6xl font-bold leading-relaxed min-h-[200px] flex items-center justify-center">
+            <h1 className="text-4xl md:text-6xl font-bold leading-relaxed min-h-[160px] flex items-center justify-center">
               <TypewriterText
                 text={currentQuestion.text}
                 speed={30}
@@ -270,7 +276,7 @@ export default function SponsorsPage() {
 
             {/* Input field */}
             {showInput && currentQuestion && (
-              <div className="space-y-8 animate-fade-in">
+              <div className="space-y-6 animate-fade-in">
                 {currentQuestion.type === "select" ? (
                   <select
                     value={answers[currentQuestion.id] || ""}
@@ -407,6 +413,22 @@ export default function SponsorsPage() {
           )}
         </div>
       </div>
+
+      {/* Modal de éxito */}
+      <SponsorSuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        companyName={answers.name || ""}
+        contactName={answers.contact_name || ""}
+        plan={(() => {
+          const planMapping: Record<string, string> = {
+            'Silver - Aliado Inicial (S/ 300)': 'silver',
+            'Golden - Aliado Formador (S/ 450)': 'gold', 
+            'Diamond - Hiring Ally (S/ 600)': 'diamond'
+          }
+          return planMapping[answers.plan] || 'gold'
+        })()}
+      />
     </div>
   )
 }

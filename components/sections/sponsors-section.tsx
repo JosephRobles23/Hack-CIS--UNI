@@ -62,7 +62,7 @@ export default function SponsorsSection() {
                 href={sponsor.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative w-[160px] sm:w-[200px] lg:w-[220px] h-28 sm:h-36 lg:h-40 flex items-center justify-center rounded-md border border-white/20 transition-all duration-300 hover:bg-white/5 cursor-pointer"
+                className="group relative w-[160px] sm:w-[200px] lg:w-[220px] h-28 sm:h-36 lg:h-40 flex items-center justify-center rounded-md border border-white/40 transition-all duration-300 hover:bg-white/5 cursor-pointer"
                 style={{ backgroundColor: "transparent" }}
               >
                 <Image

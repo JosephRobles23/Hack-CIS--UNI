@@ -5,13 +5,21 @@ import { Button } from "@/components/ui/button"
 import GradientText from "@/components/gradient-text"
 import { X, MessageCircle, Home } from "lucide-react"
 
-interface SuccessModalProps {
+interface SponsorSuccessModalProps {
   isOpen: boolean
   onClose: () => void
-  participantName: string
+  companyName: string
+  contactName: string
+  plan: string
 }
 
-export default function SuccessModal({ isOpen, onClose, participantName }: SuccessModalProps) {
+export default function SponsorSuccessModal({
+  isOpen,
+  onClose,
+  companyName,
+  contactName,
+  plan
+}: SponsorSuccessModalProps) {
   const [showConfetti, setShowConfetti] = useState(false)
 
   useEffect(() => {
@@ -25,13 +33,24 @@ export default function SuccessModal({ isOpen, onClose, participantName }: Succe
     }
   }, [isOpen])
 
-  const handleWhatsAppClick = () => {
-    // Enlace al grupo de WhatsApp de la hackathon
-    window.open("https://chat.whatsapp.com/KjuBCFP0GLq8D622MW59A3?mode=ems_copy_c", "_blank")
+  const handleContactClick = () => {
+    // Enlace para contactar al equipo organizador por WhatsApp
+    const message = `Hola! Soy ${contactName} de ${companyName}. Acabamos de registrarnos como patrocinadores del plan ${getPlanDisplayName(plan)} para Hack[CIS] 2025. Nos gustaría coordinar los detalles del patrocinio.`
+    const encodedMessage = encodeURIComponent(message)
+    window.open(`https://wa.me/51955329623?text=${encodedMessage}`, "_blank")
   }
 
   const handleGoHome = () => {
     window.location.href = "/"
+  }
+
+  const getPlanDisplayName = (planValue: string) => {
+    const planNames: Record<string, string> = {
+      'silver': 'Silver - Aliado Inicial',
+      'gold': 'Golden - Aliado Formador',
+      'diamond': 'Diamond - Hiring Ally'
+    }
+    return planNames[planValue] || planValue
   }
 
   if (!isOpen) return null
@@ -52,16 +71,16 @@ export default function SuccessModal({ isOpen, onClose, participantName }: Succe
           {/* Contenido del modal */}
           <div className="p-8 text-center space-y-6">
             {/* Emoji de celebración */}
-            <div className="text-6xl animate-bounce">🎉</div>
+            <div className="text-6xl animate-bounce">🤝</div>
 
             {/* Título */}
             <div className="space-y-2">
               <h2 className="text-3xl font-bold text-white">
-                ¡Felicitaciones!
+                ¡Bienvenidos como patrocinadores!
               </h2>
               <p className="text-xl text-gray-300">
                 <GradientText gradient="from-cyan-400 to-purple-400">
-                  {participantName}
+                  {companyName}
                 </GradientText>
               </p>
             </div>
@@ -69,26 +88,26 @@ export default function SuccessModal({ isOpen, onClose, participantName }: Succe
             {/* Mensaje */}
             <div className="space-y-3">
               <p className="text-lg text-gray-300">
-                Te has registrado exitosamente en
+                Gracias {contactName}, tu solicitud de patrocinio ha sido registrada exitosamente
               </p>
-              <div className="text-2xl font-bold">
+              <div className="text-xl font-bold">
                 <GradientText gradient="from-yellow-400 to-orange-400">
-                  Hack[CIS] 2025
+                  Plan: {getPlanDisplayName(plan)}
                 </GradientText>
               </div>
               <p className="text-gray-400">
-                ¡Prepárate para 5 días increíbles de innovación y tecnología!
+                Nuestro equipo se pondrá en contacto contigo pronto para coordinar los detalles del patrocinio.
               </p>
             </div>
 
             {/* Botones */}
             <div className="space-y-4 pt-4">
               <Button
-                onClick={handleWhatsAppClick}
+                onClick={handleContactClick}
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
               >
                 <MessageCircle className="h-5 w-5" />
-                Unirme al grupo de WhatsApp
+                Contactar al equipo organizador
               </Button>
 
               <Button
@@ -122,7 +141,7 @@ export default function SuccessModal({ isOpen, onClose, participantName }: Succe
               animation: confetti-rise linear;
             }
           `}</style>
-          
+
           {/* Confeti desde esquina inferior izquierda */}
           <div className="fixed bottom-0 left-0 w-64 h-screen z-[60] pointer-events-none overflow-hidden">
             {Array.from({ length: 20 }).map((_, i) => (

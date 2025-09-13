@@ -309,20 +309,29 @@ export default function RegisterPage() {
         body: JSON.stringify(registrationData),
       })
 
-      const result = await response.json()
-
-      if (result.success) {
-        console.log("Registro completado exitosamente:", result.data)
+      // Verificar si la respuesta fue exitosa basándose en el status code
+      if (response.ok) {
+        // Status 200-299 indica éxito
+        console.log("Registro completado exitosamente")
         toast({
           title: "¡Registro exitoso!",
           description: "Te has registrado correctamente en Hack[CIS] 2025",
         })
         setShowSuccessModal(true)
       } else {
-        console.error("Error en el registro:", result.message, result.errors)
+        // Intentar obtener el mensaje de error del response
+        let errorMessage = "Error al enviar el registro. Por favor, intenta nuevamente."
+        try {
+          const result = await response.json()
+          errorMessage = result.message || errorMessage
+        } catch (e) {
+          // Si no se puede parsear el JSON, usar mensaje por defecto
+        }
+        
+        console.error("Error en el registro:", response.status, errorMessage)
         toast({
           title: "Error en el registro",
-          description: result.message || "Error al enviar el registro. Por favor, intenta nuevamente.",
+          description: errorMessage,
           variant: "destructive",
         })
         setFieldError("Error al enviar el registro. Por favor, intenta nuevamente.")
@@ -339,14 +348,7 @@ export default function RegisterPage() {
     }
   }
 
-  // Función auxiliar para generar UUID (temporal)
-  const generateUUID = () => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      const r = Math.random() * 16 | 0
-      const v = c == 'x' ? r : (r & 0x3 | 0x8)
-      return v.toString(16)
-    })
-  }
+
 
   const handleInputChange = (value: string) => {
     setAnswers((prev) => ({
