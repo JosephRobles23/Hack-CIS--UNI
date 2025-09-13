@@ -42,7 +42,7 @@ const questions: Question[] = [
     text: "¿Cuál es tu apellido?",
     placeholder: "Tu apellido completo",
     type: "text",
-    highlightWords: ["nombre"],
+    highlightWords: ["apellido"],
     required: true,
   },
   {
@@ -385,7 +385,7 @@ export default function RegisterPage() {
   }, [showInput, canProceed, currentStep])
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
+    <div className="h-screen bg-black text-white overflow-hidden flex flex-col">
       <style jsx>{`
         .animate-fade-in {
           animation: fadeIn 0.5s ease-in-out;
@@ -405,15 +405,16 @@ export default function RegisterPage() {
       <FloatingParticles />
 
       {/* Header */}
-      <nav className="relative z-10 p-6 flex justify-between items-center max-w-7xl mx-auto">
-        <div className="text-2xl font-bold">
+      <nav className="relative z-10 p-4 sm:p-6 flex justify-between items-center max-w-7xl mx-auto w-full flex-shrink-0">
+        <div className="text-xl sm:text-2xl font-bold">
           <GradientText>Hack[CIS]</GradientText>
         </div>
-        <a href="/" className="text-gray-400 hover:text-white transition-colors">
+        <a href="/" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">
           Volver al inicio
         </a>
       </nav>
 
+      {/* Main Content */}
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-start p-8 mt-12">
         <div className="max-w-4xl w-full space-y-8">
           {/* Progress indicator */}
@@ -428,8 +429,8 @@ export default function RegisterPage() {
           </div>
 
           {/* Question */}
-          <div className="text-center space-y-8">
-            <h1 className="text-4xl md:text-6xl font-bold leading-relaxed min-h-[150px] flex items-center justify-center">
+          <div className="text-center flex-1 flex flex-col justify-center space-y-6 sm:space-y-8 min-h-0">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight flex items-center justify-center px-2 min-h-[80px] sm:min-h-[120px] lg:min-h-[150px]">
               <TypewriterText
                 text={currentQuestion.text}
                 speed={30}
@@ -516,14 +517,14 @@ export default function RegisterPage() {
                   )}
                 </div>
 
-                <div className="flex justify-center space-x-4">
+                <div className="flex justify-center space-x-3 sm:space-x-4 flex-shrink-0">
                   {currentStep > 0 && (
                     <Button
                       onClick={handleBack}
                       variant="outline"
-                      className="border-gray-600 text-gray-400 hover:bg-gray-800 hover:text-white px-8 py-3 bg-transparent"
+                      className="border-gray-600 text-gray-400 hover:bg-gray-800 hover:text-white px-4 sm:px-8 py-2 sm:py-3 bg-transparent text-sm sm:text-base"
                     >
-                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      <ArrowLeft className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                       Atrás
                     </Button>
                   )}
@@ -531,7 +532,7 @@ export default function RegisterPage() {
                   <Button
                     onClick={handleNext}
                     disabled={!canProceed || isSubmitting}
-                    className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-black font-semibold px-8 py-3 rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+                    className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-black font-semibold px-4 sm:px-8 py-2 sm:py-3 rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 text-sm sm:text-base"
                   >
                     {isSubmitting ? (
                       "Enviando..."
@@ -540,7 +541,7 @@ export default function RegisterPage() {
                     ) : (
                       <>
                         Continuar
-                        <ArrowRight className="ml-2 h-4 w-4" />
+                        <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                       </>
                     )}
                   </Button>

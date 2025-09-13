@@ -220,7 +220,7 @@ export default function SponsorsPage() {
   }, [showInput, canProceed, currentStep])
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
+    <div className="h-screen bg-black text-white overflow-hidden flex flex-col">
       <style jsx>{`
         .animate-fade-in {
           animation: fadeIn 0.5s ease-in-out;
@@ -240,31 +240,32 @@ export default function SponsorsPage() {
       <FloatingParticles />
 
       {/* Header */}
-      <nav className="relative z-10 p-6 flex justify-between items-center max-w-7xl mx-auto">
-        <div className="text-2xl font-bold">
+      <nav className="relative z-10 p-4 sm:p-6 flex justify-between items-center max-w-7xl mx-auto w-full flex-shrink-0">
+        <div className="text-xl sm:text-2xl font-bold">
           <GradientText>Hack[CIS]</GradientText>
         </div>
-        <a href="/" className="text-gray-400 hover:text-white transition-colors">
+        <a href="/" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">
           Volver al inicio
         </a>
       </nav>
 
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-start p-8">
-        <div className="max-w-4xl w-full space-y-12">
+      {/* Main Content */}
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 min-h-0">
+        <div className="max-w-4xl w-full h-full flex flex-col justify-center space-y-6 sm:space-y-8">
           {/* Progress indicator */}
-          <div className="flex justify-center space-x-2 mb-4">
+          <div className="flex justify-center space-x-2 flex-shrink-0">
             {questions.map((_, index) => (
               <div
                 key={index}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${index <= currentStep ? "bg-yellow-400 scale-110" : "bg-gray-600"
+                className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${index <= currentStep ? "bg-yellow-400 scale-110" : "bg-gray-600"
                   }`}
               />
             ))}
           </div>
 
           {/* Question */}
-          <div className="text-center space-y-8">
-            <h1 className="text-4xl md:text-6xl font-bold leading-relaxed min-h-[160px] flex items-center justify-center">
+          <div className="text-center flex-1 flex flex-col justify-center space-y-6 sm:space-y-8 min-h-0">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight flex items-center justify-center px-2 min-h-[80px] sm:min-h-[120px] lg:min-h-[160px]">
               <TypewriterText
                 text={currentQuestion.text}
                 speed={30}
@@ -276,43 +277,45 @@ export default function SponsorsPage() {
 
             {/* Input field */}
             {showInput && currentQuestion && (
-              <div className="space-y-6 animate-fade-in">
-                {currentQuestion.type === "select" ? (
-                  <select
-                    value={answers[currentQuestion.id] || ""}
-                    onChange={(e) => handleInputChange(e.target.value)}
-                    className="w-full max-w-lg mx-auto bg-gray-900/50 border border-gray-700 rounded-lg px-6 py-4 text-white text-lg focus:border-yellow-400 focus:outline-none transition-colors [&>option]:bg-gray-900 [&>option]:text-white [&>option:checked]:bg-yellow-600"
-                  >
-                    <option value="" className="bg-gray-900 text-gray-400">{currentQuestion.placeholder}</option>
-                    {currentQuestion.options?.map((option) => (
-                      <option key={option} value={option} className="bg-gray-900 text-white hover:bg-gray-800">
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <Input
-                    type={currentQuestion.type}
-                    placeholder={currentQuestion.placeholder}
-                    value={answers[currentQuestion.id] || ""}
-                    onChange={(e) => handleInputChange(e.target.value)}
-                    className="w-full max-w-lg mx-auto bg-gray-900/50 border-gray-700 focus:border-yellow-400 text-white placeholder-gray-400 text-lg py-4 px-6"
-                    autoFocus
-                  />
-                )}
+              <div className="space-y-4 sm:space-y-6 animate-fade-in flex-shrink-0">
+                <div className="max-h-[30vh] overflow-y-auto">
+                  {currentQuestion.type === "select" ? (
+                    <select
+                      value={answers[currentQuestion.id] || ""}
+                      onChange={(e) => handleInputChange(e.target.value)}
+                      className="w-full max-w-lg mx-auto bg-gray-900/50 border border-gray-700 rounded-lg px-4 sm:px-6 py-3 sm:py-4 text-white text-base sm:text-lg focus:border-yellow-400 focus:outline-none transition-colors [&>option]:bg-gray-900 [&>option]:text-white [&>option:checked]:bg-yellow-600"
+                    >
+                      <option value="" className="bg-gray-900 text-gray-400">{currentQuestion.placeholder}</option>
+                      {currentQuestion.options?.map((option) => (
+                        <option key={option} value={option} className="bg-gray-900 text-white hover:bg-gray-800">
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <Input
+                      type={currentQuestion.type}
+                      placeholder={currentQuestion.placeholder}
+                      value={answers[currentQuestion.id] || ""}
+                      onChange={(e) => handleInputChange(e.target.value)}
+                      className="w-full max-w-lg mx-auto bg-gray-900/50 border-gray-700 focus:border-yellow-400 text-white placeholder-gray-400 text-base sm:text-lg py-3 sm:py-4 px-4 sm:px-6"
+                      autoFocus
+                    />
+                  )}
+                </div>
 
-                <p className="text-sm text-gray-400">
+                <p className="text-xs sm:text-sm text-gray-400 flex-shrink-0">
                   {currentQuestion.required ? "*Campo obligatorio" : "*Campo opcional"}
                 </p>
 
-                <div className="flex justify-center space-x-4">
+                <div className="flex justify-center space-x-3 sm:space-x-4 flex-shrink-0">
                   {currentStep > 0 && (
                     <Button
                       onClick={handleBack}
                       variant="outline"
-                      className="border-gray-600 text-gray-400 hover:bg-gray-800 hover:text-white px-8 py-3 bg-transparent"
+                      className="border-gray-600 text-gray-400 hover:bg-gray-800 hover:text-white px-4 sm:px-8 py-2 sm:py-3 bg-transparent text-sm sm:text-base"
                     >
-                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      <ArrowLeft className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                       Atrás
                     </Button>
                   )}
@@ -320,7 +323,7 @@ export default function SponsorsPage() {
                   <Button
                     onClick={handleNext}
                     disabled={!canProceed || isSubmitting}
-                    className="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-300 hover:to-orange-300 text-black font-semibold px-8 py-3 rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+                    className="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-300 hover:to-orange-300 text-black font-semibold px-4 sm:px-8 py-2 sm:py-3 rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 text-sm sm:text-base"
                   >
                     {isSubmitting ? (
                       "Enviando..."
@@ -329,7 +332,7 @@ export default function SponsorsPage() {
                     ) : (
                       <>
                         Continuar
-                        <ArrowRight className="ml-2 h-4 w-4" />
+                        <ArrowRight className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                       </>
                     )}
                   </Button>
@@ -338,74 +341,84 @@ export default function SponsorsPage() {
             )}
           </div>
 
-          {/* Sponsorship Plans Info */}
+          {/* Sponsorship Plans Info - Solo visible cuando no hay scroll */}
           {currentQuestion.id === "plan" && showInput && (
-            <div className="mt-12 max-w-6xl mx-auto space-y-8">
-              <h3 className="text-2xl font-bold text-center mb-8">
-                <GradientText gradient="from-yellow-400 to-orange-400">Planes de Patrocinio</GradientText>
-              </h3>
-
-              <div className="grid lg:grid-cols-3 gap-8">
-                {/* Silver Plan */}
-                <div className="bg-gray-900/50 border border-gray-400 rounded-lg p-6">
-                  <div className="text-center mb-4">
-                    <h4 className="text-2xl font-bold text-gray-400 mb-2">Silver</h4>
-                    <p className="text-lg text-yellow-400 font-semibold">"Aliado Inicial"</p>
-                    <p className="text-3xl font-bold text-white mt-2">S/ 300</p>
-                  </div>
-                  <ul className="text-sm text-gray-300 space-y-2">
-                    <li>• Logo en el sitio web oficial de la hackathon, en las bases y en el material digital del evento</li>
-                    <li>• Mención en todas las redes sociales de IEEE CIS UNI y comunidades aliadas</li>
-                    <li>• 10 minutos de exposición en el auditorio</li>
-                    <li>• Acceso al catálogo digital con los proyectos participantes (descripción + contacto de los equipos)</li>
-                    <li>• Presencia en la parte trasera del cartel de premiación (logo pequeño)</li>
-                  </ul>
+            <div className="absolute inset-0 bg-black/95 z-50 overflow-y-auto p-4 sm:p-6 lg:p-8">
+              <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-xl sm:text-2xl font-bold text-center">
+                    <GradientText gradient="from-yellow-400 to-orange-400">Planes de Patrocinio</GradientText>
+                  </h3>
+                  <button 
+                    onClick={() => setShowInput(false)}
+                    className="text-gray-400 hover:text-white text-2xl"
+                  >
+                    ×
+                  </button>
                 </div>
 
-                {/* Golden Plan */}
-                <div className="bg-gray-900/50 border border-yellow-400 rounded-lg p-6 relative">
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-yellow-400 text-black px-4 py-1 rounded-full text-sm font-bold">Recomendado</span>
-                  </div>
-                  <div className="text-center mb-4">
-                    <h4 className="text-2xl font-bold text-yellow-400 mb-2">Golden</h4>
-                    <p className="text-lg text-yellow-400 font-semibold">"Aliado Formador"</p>
-                    <p className="text-3xl font-bold text-white mt-2">S/ 450</p>
-                  </div>
-                  <div className="text-sm text-gray-300 space-y-2">
-                    <p className="text-yellow-400 font-semibold mb-2">Incluye todo lo de Silver +</p>
-                    <ul className="space-y-2">
-                      <li>• Logo destacado en todas las publicaciones oficiales y en los banners físicos dentro del evento</li>
-                      <li>• Logo en los certificados digitales para finalistas y ganadores</li>
-                      <li>• 20 minutos de exposición en el evento final</li>
-                      <li>• Participación como jurado invitado</li>
-                      <li>• Oportunidad de realizar un workshop/taller exclusivo para participantes en los días previos al evento</li>
-                      <li>• Presencia en el cartel de premiación (logo mediano en la gifcard)</li>
+                <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                  {/* Silver Plan */}
+                  <div className="bg-gray-900/50 border border-gray-400 rounded-lg p-4 sm:p-6">
+                    <div className="text-center mb-3 sm:mb-4">
+                      <h4 className="text-lg sm:text-2xl font-bold text-gray-400 mb-1 sm:mb-2">Silver</h4>
+                      <p className="text-sm sm:text-lg text-yellow-400 font-semibold">"Aliado Inicial"</p>
+                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">S/ 300</p>
+                    </div>
+                    <ul className="text-xs sm:text-sm text-gray-300 space-y-1 sm:space-y-2">
+                      <li>• Logo en el sitio web oficial de la hackathon, en las bases y en el material digital del evento</li>
+                      <li>• Mención en todas las redes sociales de IEEE CIS UNI y comunidades aliadas</li>
+                      <li>• 10 minutos de exposición en el auditorio</li>
+                      <li>• Acceso al catálogo digital con los proyectos participantes (descripción + contacto de los equipos)</li>
+                      <li>• Presencia en la parte trasera del cartel de premiación (logo pequeño)</li>
                     </ul>
                   </div>
-                </div>
 
-                {/* Diamond Plan */}
-                <div className="bg-gray-900/50 border border-purple-400 rounded-lg p-6 relative">
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-purple-400 text-black px-4 py-1 rounded-full text-sm font-bold">Recomendado</span>
+                  {/* Golden Plan */}
+                  <div className="bg-gray-900/50 border border-yellow-400 rounded-lg p-4 sm:p-6 relative">
+                    <div className="absolute -top-2 sm:-top-3 left-1/2 transform -translate-x-1/2">
+                      <span className="bg-yellow-400 text-black px-2 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-bold">Recomendado</span>
+                    </div>
+                    <div className="text-center mb-3 sm:mb-4">
+                      <h4 className="text-lg sm:text-2xl font-bold text-yellow-400 mb-1 sm:mb-2">Golden</h4>
+                      <p className="text-sm sm:text-lg text-yellow-400 font-semibold">"Aliado Formador"</p>
+                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">S/ 450</p>
+                    </div>
+                    <div className="text-xs sm:text-sm text-gray-300 space-y-1 sm:space-y-2">
+                      <p className="text-yellow-400 font-semibold mb-1 sm:mb-2">Incluye todo lo de Silver +</p>
+                      <ul className="space-y-1 sm:space-y-2">
+                        <li>• Logo destacado en todas las publicaciones oficiales y en los banners físicos dentro del evento</li>
+                        <li>• Logo en los certificados digitales para finalistas y ganadores</li>
+                        <li>• 20 minutos de exposición en el evento final</li>
+                        <li>• Participación como jurado invitado</li>
+                        <li>• Oportunidad de realizar un workshop/taller exclusivo para participantes en los días previos al evento</li>
+                        <li>• Presencia en el cartel de premiación (logo mediano en la gifcard)</li>
+                      </ul>
+                    </div>
                   </div>
-                  <div className="text-center mb-4">
-                    <h4 className="text-2xl font-bold text-purple-400 mb-2">Diamond</h4>
-                    <p className="text-lg text-purple-400 font-semibold">"Hiring Ally"</p>
-                    <p className="text-3xl font-bold text-white mt-2">S/ 600</p>
-                  </div>
-                  <div className="text-sm text-gray-300 space-y-2">
-                    <p className="text-purple-400 font-semibold mb-2">Incluye todo lo de Golden +</p>
-                    <ul className="space-y-2">
-                      <li>• Opción de proponer un reto técnico (ejemplo: API, dataset o caso de uso)</li>
-                      <li>• Espacio de stand de reclutamiento/exposición en la sede durante todo el evento</li>
-                      <li>• 30 minutos de exposición en el auditorio</li>
-                      <li>• Acceso a la base de datos de CVs de los participantes (solo finalistas)</li>
-                      <li>• Inclusión del logo en el video oficial del evento y en la fotografía grupal de clausura</li>
-                      <li>• Reconocimiento especial en la ceremonia final como "Hiring Ally"</li>
-                      <li>• Presencia en el cartel de premiación de ganadores (con logo destacado en la "gifcard" gigante)</li>
-                    </ul>
+
+                  {/* Diamond Plan */}
+                  <div className="bg-gray-900/50 border border-purple-400 rounded-lg p-4 sm:p-6 relative">
+                    <div className="absolute -top-2 sm:-top-3 left-1/2 transform -translate-x-1/2">
+                      <span className="bg-purple-400 text-black px-2 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-bold">Premium</span>
+                    </div>
+                    <div className="text-center mb-3 sm:mb-4">
+                      <h4 className="text-lg sm:text-2xl font-bold text-purple-400 mb-1 sm:mb-2">Diamond</h4>
+                      <p className="text-sm sm:text-lg text-purple-400 font-semibold">"Hiring Ally"</p>
+                      <p className="text-xl sm:text-3xl font-bold text-white mt-1 sm:mt-2">S/ 600</p>
+                    </div>
+                    <div className="text-xs sm:text-sm text-gray-300 space-y-1 sm:space-y-2">
+                      <p className="text-purple-400 font-semibold mb-1 sm:mb-2">Incluye todo lo de Golden +</p>
+                      <ul className="space-y-1 sm:space-y-2">
+                        <li>• Opción de proponer un reto técnico (ejemplo: API, dataset o caso de uso)</li>
+                        <li>• Espacio de stand de reclutamiento/exposición en la sede durante todo el evento</li>
+                        <li>• 30 minutos de exposición en el auditorio</li>
+                        <li>• Acceso a la base de datos de CVs de los participantes (solo finalistas)</li>
+                        <li>• Inclusión del logo en el video oficial del evento y en la fotografía grupal de clausura</li>
+                        <li>• Reconocimiento especial en la ceremonia final como "Hiring Ally"</li>
+                        <li>• Presencia en el cartel de premiación de ganadores (con logo destacado en la "gifcard" gigante)</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>

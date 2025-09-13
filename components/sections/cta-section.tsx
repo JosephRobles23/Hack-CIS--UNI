@@ -22,7 +22,7 @@ export default function CTASection() {
                 : 'opacity-0 translate-y-8'
             }`}
           >
-            <h2 className="text-5xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+            <h2 className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
               <GradientText>¿Listo para</GradientText>
               <br />
               <GradientText gradient="from-yellow-400 to-orange-400 font-neue-power">innovar?</GradientText>

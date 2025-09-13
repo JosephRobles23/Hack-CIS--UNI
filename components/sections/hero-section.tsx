@@ -31,7 +31,7 @@ export default function HeroSection() {
             </div>
           </h1>
 
-          <p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto leading-relaxed font-mono">
+          <p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto leading-relaxed font-mono font-bold">
             <TypewriterText text="[CIS HACK] → Deploying the Future in 120H" speed={45} />
           </p>
         </div>
