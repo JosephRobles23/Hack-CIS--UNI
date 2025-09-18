@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/toaster'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'CIS[HACK] UNI',
+  title: 'Hack[CIS]',
   description: 'Creado por Joseph Chuquipiondo & Eduardo Villegas',
 }
 

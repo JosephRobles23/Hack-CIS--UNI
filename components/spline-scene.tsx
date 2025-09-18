@@ -58,8 +58,8 @@ export default function SplineScene() {
         style={{
           width: '100%',
           height: '100%',
-          opacity: '0.3', // Hacer semi-transparente para que no domine la escena
-          pointerEvents: 'none' // Asegurar que no interfiera con la interacción
+          opacity: '0.5', // Hacer semi-transparente para que no domine la escena
+          pointerEvents: 'auto' // Asegurar que no interfiera con la interacción
         } as React.CSSProperties}
       />
       
