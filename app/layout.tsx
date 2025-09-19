@@ -7,7 +7,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Hack[CIS]',
-  description: 'Creado por Joseph Chuquipiondo & Eduardo Villegas',
+  description: 'HackCIS.start({ time: "120H", prize: "S/2K" });',
 }
 
 export default function RootLayout({
