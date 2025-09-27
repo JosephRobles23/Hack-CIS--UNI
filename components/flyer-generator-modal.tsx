@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { X, Download, Share2, Upload, Loader2 } from "lucide-react"
-import { FlyerGeneratorService } from "@/lib/neobanana-service"
+import { FlyerComposerService } from "@/lib/flyer-composer"
 import { toast } from "@/hooks/use-toast"
 
 interface FlyerGeneratorModalProps {
@@ -21,9 +21,10 @@ export default function FlyerGeneratorModal({
     const [previewUrl, setPreviewUrl] = useState<string>("")
     const [generatedFlyerUrl, setGeneratedFlyerUrl] = useState<string>("")
     const [isProcessing, setIsProcessing] = useState(false)
-    const [step, setStep] = useState<'upload' | 'preview' | 'generated'>('upload')
+    const [generationProgress, setGenerationProgress] = useState(0)
+    const [step, setStep] = useState<'upload' | 'preview' | 'generating' | 'generated'>('upload')
 
-    const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0]
         if (!file) return
 
@@ -62,21 +63,55 @@ export default function FlyerGeneratorModal({
         if (!selectedFile) return
 
         setIsProcessing(true)
+        setGenerationProgress(0)
+        setStep('generating') // Cambiar al paso de generación
+
+        // Simular progreso de generación
+        const simulateProgress = () => {
+            let progress = 0
+            const interval = setInterval(() => {
+                progress += Math.random() * 10 + 3 // Incremento aleatorio entre 3-13%
+                
+                if (progress >= 95) {
+                    progress = 95 // Dejar en 95% hasta que termine realmente
+                    clearInterval(interval)
+                }
+                
+                setGenerationProgress(Math.min(progress, 95))
+            }, 200)
+            
+            return interval
+        }
+
+        const progressInterval = simulateProgress()
 
         try {
-            const flyerUrl = await FlyerGeneratorService.generatePersonalizedFlyer(
+            const flyerUrl = await FlyerComposerService.generatePersonalizedFlyer(
                 selectedFile,
                 participantName
             )
 
-            setGeneratedFlyerUrl(flyerUrl)
-            setStep('generated')
+            // Completar progreso
+            clearInterval(progressInterval)
+            setGenerationProgress(100)
 
-            toast({
-                title: "¡Flyer generado! 🚀",
-                description: "Tu flyer personalizado está listo para compartir",
-            })
+            // Pequeña pausa para mostrar el 100%
+            setTimeout(() => {
+                setGeneratedFlyerUrl(flyerUrl)
+                setStep('generated')
+                setGenerationProgress(0)
+
+                toast({
+                    title: "¡Flyer generado! 🚀",
+                    description: "Tu flyer personalizado está listo para compartir",
+                })
+            }, 500)
+
         } catch (error) {
+            clearInterval(progressInterval)
+            setGenerationProgress(0)
+            setStep('preview') // Volver al preview en caso de error
+            
             console.error('Error generando flyer:', error)
             toast({
                 title: "Error al generar flyer",
@@ -84,7 +119,9 @@ export default function FlyerGeneratorModal({
                 variant: "destructive"
             })
         } finally {
-            setIsProcessing(false)
+            setTimeout(() => {
+                setIsProcessing(false)
+            }, 500)
         }
     }
 
@@ -155,6 +192,7 @@ export default function FlyerGeneratorModal({
         setGeneratedFlyerUrl("")
         setStep('upload')
         setIsProcessing(false)
+        setGenerationProgress(0)
     }
 
     const handleClose = () => {
@@ -210,7 +248,7 @@ export default function FlyerGeneratorModal({
                                     <Upload className="h-12 w-12 text-gray-400" />
                                     <div className="text-center">
                                         <p className="text-white font-medium">Sube tu foto</p>
-                                        <p className="text-sm text-gray-400">JPG, PNG (máx. 5MB)</p>
+                                        <p className="text-sm text-gray-400">JPG, PNG (máx. 10MB)</p>
                                     </div>
                                 </label>
                             </div>
@@ -251,15 +289,69 @@ export default function FlyerGeneratorModal({
                                     disabled={isProcessing}
                                     className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-black font-semibold"
                                 >
-                                    {isProcessing ? (
-                                        <>
-                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                            Generando...
-                                        </>
-                                    ) : (
-                                        "Generar Flyer 🎨"
-                                    )}
+                                    Generar Flyer 🎨
                                 </Button>
+                            </div>
+                        </div>
+                    )}
+
+                    {step === 'generating' && (
+                        <div className="space-y-6">
+                            <div className="text-center">
+                                <h3 className="text-xl font-semibold text-white mb-2">
+                                    Generando tu flyer 🎨
+                                </h3>
+                                <p className="text-gray-400">
+                                    Eliminando fondo con IA y creando tu flyer personalizado...
+                                </p>
+                            </div>
+
+                            {/* Loader circular grande */}
+                            <div className="flex justify-center">
+                                <div className="flex flex-col items-center space-y-4">
+                                    <div className="relative w-20 h-20">
+                                        {/* Círculo de fondo */}
+                                        <svg className="w-20 h-20 transform -rotate-90" viewBox="0 0 100 100">
+                                            <circle
+                                                cx="50"
+                                                cy="50"
+                                                r="40"
+                                                stroke="currentColor"
+                                                strokeWidth="8"
+                                                fill="transparent"
+                                                className="text-gray-700"
+                                            />
+                                            {/* Círculo de progreso */}
+                                            <circle
+                                                cx="50"
+                                                cy="50"
+                                                r="40"
+                                                stroke="currentColor"
+                                                strokeWidth="8"
+                                                fill="transparent"
+                                                strokeDasharray={`${2 * Math.PI * 40}`}
+                                                strokeDashoffset={`${2 * Math.PI * 40 * (1 - generationProgress / 100)}`}
+                                                className="text-cyan-400 transition-all duration-300 ease-out"
+                                                strokeLinecap="round"
+                                            />
+                                        </svg>
+                                        {/* Porcentaje en el centro */}
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <span className="text-cyan-400 font-bold text-sm">
+                                                {Math.round(generationProgress)}%
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-cyan-400 font-medium">Procesando con IA...</p>
+                                        <p className="text-sm text-gray-400">
+                                            {generationProgress < 30 ? 'Eliminando fondo de la imagen' :
+                                             generationProgress < 70 ? 'Componiendo el flyer' :
+                                             generationProgress < 95 ? 'Aplicando efectos finales' :
+                                             'Finalizando...'}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -276,11 +368,12 @@ export default function FlyerGeneratorModal({
                             </div>
 
                             <div className="flex justify-center">
-                                <div className="aspect-square w-80 flex items-center justify-center">
+                                <div className="w-64 h-auto flex items-center justify-center">
                                     <img
                                         src={generatedFlyerUrl}
                                         alt="Flyer generado"
-                                        className="object-contain rounded-lg border border-gray-600 shadow-2xl max-w-full max-h-full"
+                                        className="object-contain rounded-lg border border-gray-600 shadow-2xl max-w-full max-h-96"
+                                        style={{ aspectRatio: '1080/1920' }}
                                     />
                                 </div>
                             </div>
@@ -289,7 +382,7 @@ export default function FlyerGeneratorModal({
                                 <Button
                                     onClick={handleDownload}
                                     variant="outline"
-                                    className="border-gray-600 text-gray-400 hover:bg-gray-800"
+                                    className="border-gray-600 text-white bg-gray-800 hover:bg-white hover:text-gray-900"
                                 >
                                     <Download className="mr-2 h-4 w-4" />
                                     Descargar
@@ -307,7 +400,7 @@ export default function FlyerGeneratorModal({
                                 <Button
                                     onClick={() => setStep('upload')}
                                     variant="ghost"
-                                    className="text-gray-400 hover:text-white text-sm"
+                                    className="text-gray-400 hover:text-black text-sm"
                                 >
                                     Generar otro flyer
                                 </Button>
