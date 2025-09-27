@@ -9,6 +9,7 @@ import FloatingParticles from "@/components/floating-particles"
 import GradientText from "@/components/gradient-text"
 import SearchableSelect from "@/components/searchable-select"
 import SuccessModal from "@/components/success-modal"
+import FlyerGeneratorModal from "@/components/flyer-generator-modal"
 import { searchUniversities, searchExpertise, createUniversity, getExistingTeams, University, Expertise, Team } from "@/lib/api"
 import { toast } from "@/hooks/use-toast"
 
@@ -35,7 +36,7 @@ const questions: Question[] = [
     placeholder: "Tu nombre completo",
     type: "text",
     highlightWords: ["nombre"],
-    required: true, 
+    required: true,
   },
   {
     id: "lastname",
@@ -154,6 +155,14 @@ const questions: Question[] = [
       dependsOn: "teamChoice",
       value: "Unirme a equipo existente"
     }
+  },
+  {
+    id: "generateFlyer",
+    text: "Flexea tu lugar en la Hackathon 🚀 Carga tu foto y genera tu flyer oficial en segundos. Ready pa' romperla 🔥",
+    placeholder: "Generar mi flyer personalizado",
+    type: "text",
+    highlightWords: ["Hackathon", "flyer", "foto"],
+    required: false,
   }
 ]
 
@@ -167,6 +176,7 @@ export default function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [fieldError, setFieldError] = useState<string>("")
   const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [showFlyerModal, setShowFlyerModal] = useState(false)
 
   // Filtrar preguntas basado en condiciones
   const getVisibleQuestions = () => {
@@ -257,21 +267,21 @@ export default function RegisterPage() {
 
   const handleSubmit = async () => {
     setIsSubmitting(true)
-    
+
     try {
       // Mapear las respuestas del formulario al formato de la API
       const isCreatingNewTeam = answers.teamChoice === 'Crear nuevo equipo'
-      
+
       // Mapear niveles de español a inglés
       const levelMapping: Record<string, string> = {
         'Principiante': 'beginner',
-        'Intermedio': 'intermediate', 
+        'Intermedio': 'intermediate',
         'Avanzado': 'advanced',
         'Experto': 'expert'
       }
-      
+
       const mappedLevel = levelMapping[answers.experience] || 'beginner'
-      
+
       const registrationData = isCreatingNewTeam ? {
         name: answers.name || '',
         lastname: answers.lastname || '',
@@ -327,7 +337,7 @@ export default function RegisterPage() {
         } catch (e) {
           // Si no se puede parsear el JSON, usar mensaje por defecto
         }
-        
+
         console.error("Error en el registro:", response.status, errorMessage)
         toast({
           title: "Error en el registro",
@@ -362,10 +372,10 @@ export default function RegisterPage() {
   }
 
   const canProceed = currentQuestion?.required
-    ? currentQuestion.type === "searchable-select" 
-      ? (currentQuestion.id === "university" ? selectedUniversity !== null : 
-         currentQuestion.id === "expertise" ? selectedExpertise !== null :
-         currentQuestion.id === "existingTeam" ? selectedTeam !== null : false)
+    ? currentQuestion.type === "searchable-select"
+      ? (currentQuestion.id === "university" ? selectedUniversity !== null :
+        currentQuestion.id === "expertise" ? selectedExpertise !== null :
+          currentQuestion.id === "existingTeam" ? selectedTeam !== null : false)
       : answers[currentQuestion.id]?.trim().length > 0
     : true
 
@@ -415,7 +425,7 @@ export default function RegisterPage() {
       </nav>
 
       {/* Main Content */}
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-start p-8 mt-12">
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-start p-8 mt-3 mt-1 sm:mt-8 lg:mt-12">
         <div className="max-w-4xl w-full space-y-8">
           {/* Progress indicator */}
           <div className="flex justify-center space-x-2 mb-8">
@@ -430,7 +440,7 @@ export default function RegisterPage() {
 
           {/* Question */}
           <div className="text-center flex-1 flex flex-col justify-center space-y-6 sm:space-y-8 min-h-0">
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight flex items-center justify-center px-2 min-h-[80px] sm:min-h-[120px] lg:min-h-[150px]">
+            <h1 className="text-2xl sm:text-4xl lg:text-1xl  font-bold leading-tight flex items-center justify-center px-2 min-h-[80px] sm:min-h-[120px] lg:min-h-[130px]">
               <TypewriterText
                 text={currentQuestion.text}
                 speed={30}
@@ -442,15 +452,37 @@ export default function RegisterPage() {
 
             {/* Input field */}
             {showInput && currentQuestion && (
-              <div className="space-y-8 animate-fade-in">
-                {currentQuestion.type === "searchable-select" ? (
+              <div className="space-y-6 animate-fade-in">
+                {currentQuestion.id === "generateFlyer" ? (
+                  <div className="text-center space-y-4">
+                    <div className="mx-auto bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 rounded-2xl p-4 lg:max-w-[40%] max-w-[90%]">
+                      <div className="space-y-3">
+                        <div className="text-5xl">📸</div>
+                        <p className="text-md lg:text-lg text-gray-300">
+                          ¡Es hora de crear tu flyer!
+                        </p>
+                        <p className="text-xs lg:text-sm text-gray-400">
+                          Sube tu foto y genera un flyer único para mostrar que estás en Hack[CIS] 2025
+                        </p>
+                        <div className="flex justify-center items-center mb-4">
+                          <Button
+                            onClick={() => setShowFlyerModal(true)}
+                            className="bg-gradient-to-r from-purple-600 to-yellow-500 hover:from-purple-500 hover:to-yellow-400 text-black font-semibold px-4 py-3 text-sm lg:text-md rounded-xl transition-all duration-300 hover:scale-105"
+                          >
+                            🎨 Generar mi Flyer
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : currentQuestion.type === "searchable-select" ? (
                   <SearchableSelect
                     placeholder={currentQuestion.placeholder}
                     searchFunction={
-                      currentQuestion.id === "university" ? searchUniversities : 
-                      currentQuestion.id === "expertise" ? searchExpertise :
-                      currentQuestion.id === "existingTeam" ? async () => await getExistingTeams() : 
-                      searchUniversities
+                      currentQuestion.id === "university" ? searchUniversities :
+                        currentQuestion.id === "expertise" ? searchExpertise :
+                          currentQuestion.id === "existingTeam" ? async () => await getExistingTeams() :
+                            searchUniversities
                     }
                     onSelect={(option) => {
                       if (currentQuestion.id === "university") {
@@ -467,10 +499,10 @@ export default function RegisterPage() {
                     }}
                     onCreateNew={currentQuestion.id === "university" ? createUniversity : undefined}
                     value={
-                      currentQuestion.id === "university" ? selectedUniversity : 
-                      currentQuestion.id === "expertise" ? selectedExpertise :
-                      currentQuestion.id === "existingTeam" ? selectedTeam :
-                      null
+                      currentQuestion.id === "university" ? selectedUniversity :
+                        currentQuestion.id === "expertise" ? selectedExpertise :
+                          currentQuestion.id === "existingTeam" ? selectedTeam :
+                            null
                     }
                     createLabel={currentQuestion.id === "university" ? "Crear nueva universidad" : undefined}
                   />
@@ -556,6 +588,13 @@ export default function RegisterPage() {
       <SuccessModal
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
+        participantName={answers.name || ""}
+      />
+
+      {/* Modal del generador de flyer */}
+      <FlyerGeneratorModal
+        isOpen={showFlyerModal}
+        onClose={() => setShowFlyerModal(false)}
         participantName={answers.name || ""}
       />
     </div>
