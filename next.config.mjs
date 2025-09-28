@@ -16,11 +16,12 @@ const nextConfig = {
       },
     ],
   },
-  // Optimizaciones para Vercel
+  // Configuración específica para @imgly/background-removal
   experimental: {
     serverComponentsExternalPackages: [
       '@imgly/background-removal',
     ],
+    esmExternals: 'loose',
   },
   // Configuración para librerías que requieren transpilación
   transpilePackages: [
@@ -30,7 +31,7 @@ const nextConfig = {
   ],
   // Configuración de webpack para compatibilidad
   webpack: (config, { isServer }) => {
-    // Configuración para librerías que usan WebGL/Canvas
+    // Solo configurar fallbacks para el cliente
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -46,32 +47,32 @@ const nextConfig = {
         os: false,
         url: false,
         zlib: false,
+        net: false,
+        tls: false,
+        child_process: false,
       };
     }
 
-    // Configuración específica para @imgly/background-removal
+    // Configuración para archivos WASM y binarios
     config.module.rules.push({
       test: /\.wasm$/,
       type: 'asset/resource',
     });
 
-    // Configuración para archivos binarios
     config.module.rules.push({
       test: /\.(bin|dat)$/,
       type: 'asset/resource',
     });
 
-    // Optimización para Three.js
-    if (!isServer) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        'three/examples/jsm': 'three/examples/jsm',
-      };
+    // Excluir @imgly/background-removal del servidor
+    if (isServer) {
+      config.externals = config.externals || [];
+      config.externals.push('@imgly/background-removal');
     }
 
     return config;
   },
-  // Headers para CORS y seguridad
+  // Headers para CORS
   async headers() {
     return [
       {
@@ -79,11 +80,11 @@ const nextConfig = {
         headers: [
           {
             key: 'Cross-Origin-Embedder-Policy',
-            value: 'credentialless',
+            value: 'unsafe-none',
           },
           {
             key: 'Cross-Origin-Opener-Policy',
-            value: 'same-origin',
+            value: 'unsafe-none',
           },
         ],
       },
@@ -91,14 +92,6 @@ const nextConfig = {
   },
   // Configuración de salida para Vercel
   output: 'standalone',
-  // Configuración de compresión
-  compress: true,
-  // Configuración de trailing slash
-  trailingSlash: false,
-  // Configuración de redirects si es necesario
-  async redirects() {
-    return [];
-  },
 }
 
 export default nextConfig

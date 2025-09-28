@@ -1,4 +1,4 @@
-import { removeBackground } from '@imgly/background-removal';
+// Importación dinámica para evitar problemas de SSR
 
 /**
  * Servicio para componer flyers personalizados usando Canvas HTML5
@@ -45,6 +45,9 @@ export class FlyerComposerService {
         this.logOperation('Iniciando eliminación de fondo con IA');
 
         try {
+            // Importación dinámica para evitar problemas de SSR
+            const { removeBackground } = await import('@imgly/background-removal');
+            
             const result = await removeBackground(imageFile, {
                 model: 'isnet', // Usar modelo isnet para mejor calidad
                 output: {
