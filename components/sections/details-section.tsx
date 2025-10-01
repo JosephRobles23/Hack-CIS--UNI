@@ -89,7 +89,7 @@ export default function DetailsSection() {
           }`}
         >
           <div className="text-4xl sm:text-5xl lg:text-6xl font-bold px-2">
-            <GradientText gradient="from-yellow-400 to-orange-400">28 Set - 4 Oct</GradientText>
+            <GradientText gradient="from-yellow-400 to-orange-400">02 - 07 Nov</GradientText>
           </div>
           <div className="text-xl sm:text-2xl text-gray-300">Lima, Perú</div>
           <div className="flex items-center justify-center space-x-2 text-yellow-400 px-4">
