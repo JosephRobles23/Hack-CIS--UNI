@@ -7,7 +7,9 @@ import { ArrowRight, ArrowLeft } from "lucide-react"
 import TypewriterText from "@/components/typewriter-text"
 import FloatingParticles from "@/components/floating-particles"
 import GradientText from "@/components/gradient-text"
-import SearchableSelect from "@/components/searchable-select"
+import AutocompleteInput from "@/components/autocomplete-input"
+import ExperienceButtons from "@/components/experience-buttons"
+import TeamChoiceButtons from "@/components/team-choice-buttons"
 import SuccessModal from "@/components/success-modal"
 import FlyerGeneratorModal from "@/components/flyer-generator-modal"
 import { searchUniversities, searchExpertise, createUniversity, getExistingTeams, University, Expertise, Team } from "@/lib/api"
@@ -17,7 +19,7 @@ interface Question {
   id: string
   text: string
   placeholder: string
-  type: "text" | "email" | "select" | "tel" | "url" | "textarea" | "searchable-select"
+  type: "text" | "email" | "select" | "tel" | "url" | "textarea" | "searchable-select" | "experience-buttons" | "team-choice-buttons"
   options?: string[]
   highlightWords?: string[]
   required?: boolean
@@ -64,7 +66,7 @@ const questions: Question[] = [
   },
   {
     id: "university",
-    text: "¿De qué universidad o instituto estudias?",
+    text: "¿En qué universidad o instituto estudias?",
     placeholder: "Busca tu universidad o instituto",
     type: "searchable-select",
     highlightWords: ["universidad", "instituto"],
@@ -98,7 +100,7 @@ const questions: Question[] = [
     id: "experience",
     text: "¿Cuál es tu nivel de experiencia en IA?",
     placeholder: "Selecciona tu nivel",
-    type: "select",
+    type: "experience-buttons",
     options: ["Principiante", "Intermedio", "Avanzado", "Experto"],
     highlightWords: ["experiencia", "IA"],
     required: true,
@@ -115,7 +117,7 @@ const questions: Question[] = [
     id: "teamChoice",
     text: "¿Quieres crear un nuevo equipo o unirte a uno existente?",
     placeholder: "Selecciona una opción",
-    type: "select",
+    type: "team-choice-buttons",
     options: ["Crear nuevo equipo", "Unirme a equipo existente"],
     highlightWords: ["equipo"],
     required: true,
@@ -376,7 +378,9 @@ export default function RegisterPage() {
       ? (currentQuestion.id === "university" ? selectedUniversity !== null :
         currentQuestion.id === "expertise" ? selectedExpertise !== null :
           currentQuestion.id === "existingTeam" ? selectedTeam !== null : false)
-      : answers[currentQuestion.id]?.trim().length > 0
+      : (currentQuestion.type === "team-choice-buttons" || currentQuestion.type === "experience-buttons")
+        ? answers[currentQuestion.id]?.trim().length > 0
+        : answers[currentQuestion.id]?.trim().length > 0
     : true
 
   // Manejar tecla Enter
@@ -392,7 +396,7 @@ export default function RegisterPage() {
     return () => {
       document.removeEventListener('keydown', handleKeyPress)
     }
-  }, [showInput, canProceed, currentStep])
+  }, [showInput, canProceed, handleNext])
 
   return (
     <div className="h-screen bg-black text-white overflow-hidden flex flex-col">
@@ -476,7 +480,7 @@ export default function RegisterPage() {
                     </div>
                   </div>
                 ) : currentQuestion.type === "searchable-select" ? (
-                  <SearchableSelect
+                  <AutocompleteInput
                     placeholder={currentQuestion.placeholder}
                     searchFunction={
                       currentQuestion.id === "university" ? searchUniversities :
@@ -505,6 +509,19 @@ export default function RegisterPage() {
                             null
                     }
                     createLabel={currentQuestion.id === "university" ? "Crear nueva universidad" : undefined}
+                  />
+                ) : currentQuestion.type === "experience-buttons" ? (
+                  <ExperienceButtons
+                    options={currentQuestion.options || []}
+                    selectedValue={answers[currentQuestion.id] || ""}
+                    onSelect={handleInputChange}
+                  />
+                ) : currentQuestion.type === "team-choice-buttons" ? (
+                  <TeamChoiceButtons
+                    options={currentQuestion.options || []}
+                    selectedValue={answers[currentQuestion.id] || ""}
+                    onSelect={handleInputChange}
+                    onAutoAdvance={handleNext}
                   />
                 ) : currentQuestion.type === "select" ? (
                   <select

@@ -62,9 +62,11 @@ export default function CountdownTimer() {
             style={{ backgroundColor: "#000000" }}
           >
             <div
-              className="text-lg sm:text-3xl font-black mb-1"
+              className="text-lg sm:text-2xl font-black mb-1"
               style={{
-                color: "#FFDA35",
+                background: "linear-gradient(to right, #FACC15, #F87171)", // equivalente a from-yellow-400 to-red-400
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
                 fontFamily: "'Orbitron', 'Rajdhani', 'Arial Black', sans-serif",
                 fontWeight: "900",
               }}

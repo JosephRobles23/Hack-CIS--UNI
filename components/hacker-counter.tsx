@@ -56,8 +56,8 @@ export default function HackerCounter() {
 
   return (
     <div className="text-center space-y-2">
-      <div className="text-4xl font-bold">
-        <GradientText gradient="from-green-400 to-cyan-400">
+      <div className="text-3xl mb-0 sm:mb-5 sm:text-5xl">
+        <GradientText gradient="from-yellow-400 to-orange-400 font-bold ">
           {loading ? (
             <div className="animate-pulse">---</div>
           ) : (
@@ -65,8 +65,8 @@ export default function HackerCounter() {
           )}
         </GradientText>
       </div>
-      <div className="text-gray-400 text-sm uppercase tracking-wider">
-        Hackers Registrados
+      <div>
+        <p className="text-gray-400 text-sm text-xs sm:text-base">hackers registrados</p>
         {loading && (
           <div className="text-xs text-gray-500 mt-1">Cargando...</div>
         )}

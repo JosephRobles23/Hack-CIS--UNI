@@ -2,8 +2,8 @@ import Image from "next/image"
 
 export default function Navigation() {
   return (
-    <nav className="relative z-10 p-6 flex justify-between items-center max-w-7xl mx-auto">
-      <div className="flex items-center">
+    <nav className="relative z-30 px-6 pt-6 flex justify-between items-center max-w-7xl mx-auto pointer-events-none">
+      <div className="flex items-center pointer-events-auto">
         <Image
           src="/images/Logo-cis.webp"
           alt="Hack CIS"

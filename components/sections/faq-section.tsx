@@ -64,20 +64,20 @@ function FAQItems({ isVisible }: { isVisible: boolean }) {
     },
     {
       q: "¿Qué edades pueden participar?",
-      a: "Pueden participar personas entre 18 y 28 años.",
+      a: "Pueden participar personas entre 18 y 30 años.",
     },
     {
       q: "¿Hasta cuándo puedo registrarme?",
-      a: "Las inscripciones cierran el 26 de setiembre a las 12:00 horas.",
+      a: "Las inscripciones cierran el 31 de Octubre a las 12:00 horas.",
     },
     {
       q: "¿Habrá un proceso de selección?",
-      a: "Sí. Si se superan los 40 equipos inscritos, se aplicará un primer filtro.",
+      a: "Sí. Si se superan los 30 equipos inscritos, se aplicará un primer filtro.",
     },
     {
       q: "¿Cuál es la modalidad y el cronograma?",
       a:
-        "La hackathon tendrá 5 días virtuales y el último día será presencial el 4 de octubre en el Auditorio CTIC UNI.",
+        "La hackathon tendrá 5 días virtuales y el último día será presencial el 8 de Noviembre en el Auditorio CTIC UNI.",
     },
   ]
 

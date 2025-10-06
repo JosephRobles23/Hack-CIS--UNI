@@ -5,6 +5,7 @@ import SplineScene from "@/components/spline-scene"
 import Navigation from "@/components/sections/navigation"
 import HeroSection from "@/components/sections/hero-section"
 import SponsorsSection from "@/components/sections/sponsors-section"
+import JudgesSection from "@/components/sections/judges-section"
 import DetailsSection from "@/components/sections/details-section"
 import AgendaSection from "@/components/sections/agenda-section"
 import EvaluationSection from "@/components/sections/evaluation-section"
@@ -19,11 +20,24 @@ export default function HackCISMinimal() {
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
       <FloatingParticles />
-      <SplineScene />
-      <Navigation />
-      <HeroSection />
-      <SponsorsSection />
+
+      {/* Spline Background - Solo para Navigation y Hero */}
+      <div className="relative min-h-screen">
+        {/* Spline como fondo absoluto - Z-INDEX BAJO */}
+        <div className="absolute inset-0 z-10">
+          <SplineScene />
+        </div>
+
+        {/* Navigation y Hero con z-index superior - VISIBLES ENCIMA */}
+        <div className="relative z-10">
+          <Navigation />
+          <HeroSection />
+        </div>
+      </div>
+
       <DetailsSection />
+      <SponsorsSection />
+      <JudgesSection />
       <SponsorshipSection />
       {/* <AgendaSection /> */}
       {/* <EvaluationSection /> */}

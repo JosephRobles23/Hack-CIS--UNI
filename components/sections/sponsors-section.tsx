@@ -31,6 +31,22 @@ export default function SponsorsSection() {
     <section className="pb-12 sm:pb-16 md:pb-20 lg:pb-28 relative overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
         <div className="max-w-6xl mx-auto text-center">
+          <div className="flex items-center justify-center space-x-2 mb-8 sm:mb-6">
+            <div
+              className="w-3 sm:w-4 lg:w-6 h-0.5 rounded-full animate-pulse"
+              style={{ backgroundColor: "#FFDA35" }}
+            />
+            <span
+              className="text-xs sm:text-sm font-medium tracking-wider uppercase opacity-70"
+              style={{ color: "#D9D9D9" }}
+            >
+              Sponsors
+            </span>
+            <div
+              className="w-3 sm:w-4 lg:w-6 h-0.5 rounded-full animate-pulse"
+              style={{ backgroundColor: "#FFDA35" }}
+            />
+          </div>
           {/* Main heading */}
           <div 
             ref={headerRef}

@@ -208,7 +208,7 @@ export default function FlyerGeneratorModal({
                 {/* Header */}
                 <div className="flex justify-between items-center p-6 border-b border-gray-700">
                     <h2 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                        Genera tu Flyer 🖌️
+                        Genera tu Flyer
                     </h2>
                     <Button
                         onClick={handleClose}
@@ -226,10 +226,10 @@ export default function FlyerGeneratorModal({
                         <div className="text-center space-y-6">
                             <div className="space-y-2">
                                 <h3 className="text-xl font-semibold text-white">
-                                    Flexea tu lugar en la Hackathon 🚀
+                                    Flexea tu lugar en la Hack[CIS]
                                 </h3>
                                 <p className="text-gray-400">
-                                    Carga tu foto y genera tu flyer oficial en segundos. Ready pa' romperla 😎🔥
+                                    Carga tu foto y genera tu flyer oficial en segundos. Ready pa' romperla 🚀🔥
                                 </p>
                             </div>
 
@@ -363,7 +363,7 @@ export default function FlyerGeneratorModal({
                                     ¡Tu flyer está listo! 🔥
                                 </h3>
                                 <p className="text-gray-400">
-                                    Compártelo en tus redes y muestra que estás en Hack[CIS] 2025
+                                    Compártelo en tus redes sociales y etiquetanos en @ieeecisuni 
                                 </p>
                             </div>
 
