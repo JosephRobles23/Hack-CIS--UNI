@@ -1,102 +1,169 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import GradientText from "../gradient-text"
-import InfiniteProfileCarousel from "../infinite-profile-carousel"
+import ProfileCard from "../ProfileCard"
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
 
-export default function JudgesSection() {
-  const judges = [
-    {
-      id: "1",
-      name: "Arian Gallardo",
-      title: "Software Engineer @ Microsoft",
-      handle: "ariangcc",
-      status: "Instagram" as const,
-      contactText: "Ver LinkedIn",
-      avatarUrl: "/images/judges/judge1.webp",
-      iconUrl: "/images/card-cis.webp",
-      profileUrl: 'https://www.linkedin.com/in/ariangcc/',
-      showUserInfo: true,
-      enableTilt: true,
-      enableMobileTilt: true,
-      onContactClick: () => handleContactClick("Arian Gallardo")
-    },
-    {
-      id: "2",
-      name: "Yancel Salinas",
-      title: "CTO @ASG Group",
-      handle: "yancel.salinas",
-      status: "Instagram" as const,
-      contactText: "Ver LinkedIn",
-      avatarUrl: "/images/judges/judge2.webp",
-      iconUrl: "/images/card-cis.webp",
-      profileUrl: 'https://www.linkedin.com/in/sagoyanfisic/',
-      showUserInfo: true,
-      enableTilt: true,
-      enableMobileTilt: true,
-      onContactClick: () => handleContactClick("Yancel Salinas")
-    },
-    {
-      id: "3",
-      name: "Anonimo",
-      title: "Anonimo",
-      handle: "anonimo",
-      status: "Instagram" as const,
-      contactText: "Ver LinkedIn",
-      avatarUrl: "/images/judges/anonimo.webp",
-      iconUrl: "/images/card-cis.webp",
-      profileUrl: '',
-      showUserInfo: true,
-      enableTilt: true,
-      enableMobileTilt: true,
-      onContactClick: () => handleContactClick("Anonimo")
-    },
-    {
-      id: "4",
-      name: "Anonimo",
-      title: "Anonimo",
-      handle: "anonimo",
-      status: "Instagram" as const,
-      contactText: "Ver LinkedIn",
-      avatarUrl: "/images/judges/anonimo.webp",
-      iconUrl: "/images/card-cis.webp",
-      profileUrl: '',
-      showUserInfo: true,
-      enableTilt: true,
-      enableMobileTilt: true,
-      onContactClick: () => handleContactClick("Anonimo")
-    }
-  ]
+// Duplicar los jurados para crear un efecto de scroll infinito
+const judges = [
+  {
+    id: "1",
+    name: "Arian Gallardo",
+    title: "Software Engineer @ Microsoft",
+    handle: "ariangcc",
+    status: "Instagram" as const,
+    contactText: "Ver LinkedIn",
+    avatarUrl: "/images/judges/judge1.webp",
+    iconUrl: "/images/card-cis.webp",
+    profileUrl: 'https://www.linkedin.com/in/ariangcc/'
+  },
+  {
+    id: "2",
+    name: "Yancel Salinas",
+    title: "CTO @ASG Group",
+    handle: "yancel.salinas",
+    status: "Instagram" as const,
+    contactText: "Ver LinkedIn",
+    avatarUrl: "/images/judges/judge2.webp",
+    iconUrl: "/images/card-cis.webp",
+    profileUrl: 'https://www.linkedin.com/in/sagoyanfisic/'
+  },
+  {
+    id: "3",
+    name: "Anonimo",
+    title: "Anonimo",
+    handle: "anonimo",
+    status: "Instagram" as const,
+    contactText: "Ver LinkedIn",
+    avatarUrl: "/images/judges/anonimo.webp",
+    iconUrl: "/images/card-cis.webp",
+    profileUrl: ''
+  },
+  {
+    id: "4",
+    name: "Anonimo",
+    title: "Anonimo",
+    handle: "anonimo",
+    status: "Instagram" as const,
+    contactText: "Ver LinkedIn",
+    avatarUrl: "/images/judges/anonimo.webp",
+    iconUrl: "/images/card-cis.webp",
+    profileUrl: ''
+  }
+];
 
+const duplicatedJudges = [...judges, ...judges, ...judges, ...judges];
+
+export default function JudgesSection() {
   const { ref: headerRef, isIntersecting: headerVisible } = useIntersectionObserver()
   const { ref: judgesRef, isIntersecting: judgesVisible } = useIntersectionObserver()
+  
+  const [isPaused, setIsPaused] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const [visibleItems, setVisibleItems] = useState(2)
-
+  // Calcular cuántos jurados mostrar por slide según el ancho de la pantalla
+  const getVisibleItems = () => {
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth >= 1024) return 4; // lg
+      if (window.innerWidth >= 768) return 3; // md
+      return 3; // sm - mostrar 1.2 jurados en móvil para indicar que hay más
+    }
+    return 2; // default para SSR
+  };
+  
+  const [visibleItems, setVisibleItems] = useState(getVisibleItems());
+  
+  // Actualizar visibleItems en cambios de tamaño de ventana
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 640) {
-        setVisibleItems(1)
-      } else if (window.innerWidth < 1024) {
-        setVisibleItems(2)
-      } else {
-        setVisibleItems(3)
-      }
+      setVisibleItems(getVisibleItems());
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Establecer el estado inicial de isMobile
+    if (typeof window !== 'undefined') {
+      setIsMobile(window.innerWidth < 768);
     }
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+  // Animar el desplazamiento automático
+  useEffect(() => {
+    if (isPaused) return;
+
+    const cardWidth = 100 / visibleItems; // Ancho de cada tarjeta en porcentaje
+    const totalWidth = cardWidth * judges.length; // Ancho total del carrusel original
+
+    let animationFrameId: number;
+    let isResetting = false;
+    
+    // Velocidad de desplazamiento más lenta en móviles
+    const getScrollSpeed = () => {
+      if (typeof window !== 'undefined' && window.innerWidth < 768) {
+        return 0.05; // Más lento en móviles
+      }
+      return 0.02; // Velocidad normal en desktop
+    };
+    
+    const animate = () => {
+      setScrollPosition(prevPos => {
+        // Si hemos desplazado más allá del ancho total, preparar para reiniciar suavemente
+        if (prevPos >= totalWidth) {
+          if (!isResetting) {
+            isResetting = true;
+            // Usar setTimeout para dar tiempo a que se complete la transición actual
+            setTimeout(() => {
+              setScrollPosition(0);
+              isResetting = false;
+            }, 0);
+          }
+          // Mantener la posición actual durante el reseteo para evitar saltos
+          return prevPos;
+        }
+        return prevPos + getScrollSpeed(); // Incremento adaptativo
+      });
+      
+      if (!isResetting) {
+        animationFrameId = requestAnimationFrame(animate);
+      }
+    };
+    
+    animationFrameId = requestAnimationFrame(animate);
+    
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [isPaused, visibleItems]);
 
   const handleContactClick = (judgeName: string) => {
     console.log(`Contact clicked for ${judgeName}`)
     // Aquí puedes agregar la lógica para mostrar más información del jurado
   }
 
+  // Estilo para el contenedor que se desplaza - diferentes configuraciones para móvil y desktop
+  const scrollerStyle = {
+    transform: `translateX(-${scrollPosition}%)`,
+    width: isMobile 
+      ? `${duplicatedJudges.length *6}%` // Estilo móvil - más amplio para dar espacio a cada tarjeta
+      : `${(duplicatedJudges.length / visibleItems) * 50}%`, // Estilo desktop - similar a TestimonialsSection
+  };
+
+  // Función para calcular el ancho de cada elemento del carrusel según el dispositivo
+  const getItemWidth = () => {
+    if (isMobile) {
+      return { width: '80%' }; // En móvil, cada tarjeta ocupa el 80% del contenedor visible
+    } else {
+      return { width: `${70 / visibleItems}%` }; // En desktop, se ajusta según visibleItems
+    }
+  };
+
   return (
-    <section className="py-12 sm:py-16 md:py-20 lg:py-28 relative overflow-hidden">
+    <section className="py-6 sm:py-16 md:py-20 lg:py-20 relative overflow-hidden">
       <div className="container px-0 relative z-10">
         <div className="flex items-center justify-center space-x-2 mb-10 sm:mb-6">
           <div
@@ -118,7 +185,7 @@ export default function JudgesSection() {
           {/* Main heading */}
           <div
             ref={headerRef}
-            className={`space-y-3 sm:space-y-4 lg:space-y-6 mb-8 sm:mb-12 lg:mb-16 transition-all duration-1000 ${headerVisible
+            className={`space-y-3 sm:space-y-4 lg:space-y-6 mb-8 sm:mb-12 lg:mb-12 transition-all duration-1000 ${headerVisible
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-8'
               }`}
@@ -153,22 +220,58 @@ export default function JudgesSection() {
           {/* Judges Carousel */}
           <div
             ref={judgesRef}
-            className={` transition-all duration-1000 delay-300 ${judgesVisible
+            className={`transition-all duration-1000 delay-300 ${judgesVisible
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-8'
               }`}
           >
-            <InfiniteProfileCarousel
-              profiles={judges}
-              visibleItems={visibleItems}
-              speed={0.08}
-              pauseOnHover={true}
-              direction="left"
-              gap={visibleItems === 1 ? 8 : 32}
-              fadeWidth={visibleItems === 1 ? 40 : 80}
-              autoPlay={true}
-              className="judges-carousel"
-            />
+            {/* Wrapper para el carrusel con padding específico para móvil */}
+            <div className="px-2 sm:px-0">
+              <div 
+                className="overflow-hidden relative mx-auto max-w-[100%] sm:max-w-full rounded-lg"
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+                onTouchStart={() => setIsPaused(true)}
+                onTouchEnd={() => setTimeout(() => setIsPaused(false), 2000)}
+                ref={carouselRef}
+              >
+                {/* Efecto de desvanecimiento en el borde izquierdo */}
+                <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 md:w-20 bg-gradient-to-r from-black to-transparent z-10"></div>
+                
+                <div 
+                  className="flex transition-transform duration-200 ease-linear py-4 md:py-6"
+                  style={scrollerStyle}
+                >
+                  {duplicatedJudges.map((judge, index) => (
+                    <div 
+                      key={`${judge.id}-${index}`} 
+                      className="flex-shrink-0 px-2 py-10 sm:px-3 md:px-4"
+                      style={getItemWidth()}
+                    >
+                      <div className="h-full">
+                        <ProfileCard
+                          avatarUrl={judge.avatarUrl}
+                          name={judge.name}
+                          title={judge.title}
+                          handle={judge.handle}
+                          status={judge.status}
+                          contactText={judge.contactText}
+                          iconUrl={judge.iconUrl}
+                          profileUrl={judge.profileUrl}
+                          showUserInfo={true}
+                          enableTilt={true}
+                          enableMobileTilt={true}
+                          onContactClick={() => handleContactClick(judge.name)}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Efecto de desvanecimiento en el borde derecho */}
+                <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 md:w-20 bg-gradient-to-l from-black to-transparent z-10"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -186,30 +289,6 @@ export default function JudgesSection() {
         }
         .animate-fade-in-up {
           animation: fade-in-up 0.8s ease-out forwards;
-        }
-        
-        :global(.judges-carousel) {
-          padding: 1rem 0;
-          min-height: 600px;
-        }
-        
-        @media (max-width: 1024px) {
-          :global(.judges-carousel) {
-            min-height: 450px;
-          }
-        }
-        
-        @media (max-width: 768px) {
-          :global(.judges-carousel) {
-            padding: 1rem 0;
-            min-height: 400px;
-          }
-        }
-        
-        @media (max-width: 480px) {
-          :global(.judges-carousel) {
-            min-height: 350px;
-          }
         }
       `}</style>
     </section>

@@ -28,7 +28,7 @@ export default function SponsorsSection() {
   const { ref: sponsorsRef, isIntersecting: sponsorsVisible } = useIntersectionObserver()
 
   return (
-    <section className="pb-12 sm:pb-16 md:pb-20 lg:pb-28 relative overflow-hidden">
+    <section className="pb-12 sm:pb-16 md:pb-20 lg:pb-20 relative overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
         <div className="max-w-6xl mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-8 sm:mb-6">
