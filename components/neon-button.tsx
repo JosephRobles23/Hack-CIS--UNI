@@ -22,7 +22,7 @@ export default function NeonButton({
 }: NeonButtonProps) {
   const variants = {
     primary:
-      "bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-black font-semibold shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40",
+      "bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-400 hover:to-purple-400 text-black font-semibold shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40",
     secondary:
       "bg-gradient-to-r from-pink-500 to-yellow-500 hover:from-pink-400 hover:to-yellow-400 text-black font-semibold shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40",
     outline:

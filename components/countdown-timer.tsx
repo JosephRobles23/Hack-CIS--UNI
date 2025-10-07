@@ -76,7 +76,7 @@ export default function CountdownTimer() {
   return (
     <div className="mb-6">
       {/* Countdown Display */}
-      <div className="grid grid-cols-4 gap-2 flex justify-center sm:gap-4 max-w-[16rem] sm:max-w-md mx-auto">
+      <div className="grid grid-cols-4 gap-2 flex justify-center sm:gap-2 max-w-[16rem] sm:max-w-sm mx-auto">
         {timeUnits.map((unit, index) => (
           <div
             key={unit.label}
