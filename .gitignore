@@ -20,10 +20,13 @@ yarn-error.log*
 .env*
 .local
 
-
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Development-only pages (not for production)
+/app/Boot/
+/app/Boot/**/*

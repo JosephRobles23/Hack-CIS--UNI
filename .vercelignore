@@ -1,0 +1,3 @@
+# Excluir páginas de desarrollo del deploy
+app/Boot/
+app/Boot/**/*
