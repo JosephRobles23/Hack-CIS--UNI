@@ -41,9 +41,18 @@ export default function SplineScene() {
     }
 
     // Retrasar la carga de Spline para no bloquear el FCP
-    const timer = setTimeout(() => {
-      loadSplineScript()
-    }, 100)
+    // Usar requestIdleCallback si está disponible, sino setTimeout
+    let timer: number | NodeJS.Timeout
+
+    if ('requestIdleCallback' in window) {
+      timer = window.requestIdleCallback(() => {
+        loadSplineScript()
+      })
+    } else {
+      timer = setTimeout(() => {
+        loadSplineScript()
+      }, 500)
+    }
 
     // Escuchar cambios de tamaño de ventana
     const handleResize = () => {
@@ -56,7 +65,11 @@ export default function SplineScene() {
     window.addEventListener('resize', handleResize)
 
     return () => {
-      clearTimeout(timer)
+      if ('requestIdleCallback' in window) {
+        window.cancelIdleCallback(timer as number)
+      } else {
+        clearTimeout(timer as NodeJS.Timeout)
+      }
       window.removeEventListener('resize', handleResize)
     }
   }, [])

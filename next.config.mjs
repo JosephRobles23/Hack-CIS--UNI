@@ -16,12 +16,25 @@ const nextConfig = {
       },
     ],
   },
+  // Optimizaciones de producción
+  swcMinify: true,
+  compress: true,
+  poweredByHeader: false,
+  
+  // Optimización de módulos
+  modularizeImports: {
+    'lucide-react': {
+      transform: 'lucide-react/dist/esm/icons/{{member}}',
+    },
+  },
+  
   transpilePackages: [
     '@react-three/fiber',
     '@react-three/drei',
     'three',
   ],
-  webpack: (config, { isServer }) => {
+  
+  webpack: (config, { isServer, dev }) => {
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -43,6 +56,13 @@ const nextConfig = {
       };
     }
 
+    // Optimización de tree-shaking
+    config.optimization = {
+      ...config.optimization,
+      usedExports: true,
+      sideEffects: false,
+    };
+
     config.module.rules.push({
       test: /\.wasm$/,
       type: 'asset/resource',
@@ -55,6 +75,7 @@ const nextConfig = {
 
     return config;
   },
+  
   async headers() {
     return [
       {
@@ -67,6 +88,36 @@ const nextConfig = {
           {
             key: 'Cross-Origin-Opener-Policy',
             value: 'unsafe-none',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+        ],
+      },
+      {
+        source: '/fonts/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/images/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },

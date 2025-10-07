@@ -1,24 +1,28 @@
 "use client"
 
 import dynamic from "next/dynamic"
-import FloatingParticles from "@/components/floating-particles"
 import Navigation from "@/components/sections/navigation"
 import HeroSection from "@/components/sections/hero-section"
-import SponsorsSection from "@/components/sections/sponsors-section"
-import JudgesSection from "@/components/sections/judges-section"
 import DetailsSection from "@/components/sections/details-section"
-import FAQSection from "@/components/sections/faq-section"
-import SponsorshipSection from "@/components/sections/sponsorship-section"
-import CTASection from "@/components/sections/cta-section"
-import Footer from "@/components/sections/footer"
 
-// Cargar Spline de forma diferida para no bloquear el FCP
+// Lazy load de componentes pesados
+const FloatingParticles = dynamic(() => import("@/components/floating-particles"), {
+  ssr: false,
+})
+
 const SplineScene = dynamic(() => import("@/components/spline-scene"), {
   ssr: false,
   loading: () => (
     <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-black to-gray-900" />
   ),
 })
+
+const SponsorsSection = dynamic(() => import("@/components/sections/sponsors-section"))
+const JudgesSection = dynamic(() => import("@/components/sections/judges-section"))
+const FAQSection = dynamic(() => import("@/components/sections/faq-section"))
+const SponsorshipSection = dynamic(() => import("@/components/sections/sponsorship-section"))
+const CTASection = dynamic(() => import("@/components/sections/cta-section"))
+const Footer = dynamic(() => import("@/components/sections/footer"))
 
 export default function HackCISMinimal() {
   return (
