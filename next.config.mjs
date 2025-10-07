@@ -20,21 +20,21 @@ const nextConfig = {
   swcMinify: true,
   compress: true,
   poweredByHeader: false,
-  
+
   // Optimización de módulos
   modularizeImports: {
     'lucide-react': {
       transform: 'lucide-react/dist/esm/icons/{{member}}',
     },
   },
-  
+
   transpilePackages: [
     '@react-three/fiber',
     '@react-three/drei',
     'three',
   ],
-  
-  webpack: (config, { isServer, dev }) => {
+
+  webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -56,13 +56,6 @@ const nextConfig = {
       };
     }
 
-    // Optimización de tree-shaking
-    config.optimization = {
-      ...config.optimization,
-      usedExports: true,
-      sideEffects: false,
-    };
-
     config.module.rules.push({
       test: /\.wasm$/,
       type: 'asset/resource',
@@ -75,7 +68,7 @@ const nextConfig = {
 
     return config;
   },
-  
+
   async headers() {
     return [
       {
