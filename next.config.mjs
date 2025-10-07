@@ -16,21 +16,15 @@ const nextConfig = {
       },
     ],
   },
-  // Configuración específica para @imgly/background-removal
   experimental: {
-    serverComponentsExternalPackages: [
-      '@imgly/background-removal',
-    ],
+    serverComponentsExternalPackages: ['@imgly/background-removal'],
   },
-  // Configuración para librerías que requieren transpilación
   transpilePackages: [
     '@react-three/fiber',
     '@react-three/drei',
     'three',
   ],
-  // Configuración de webpack para compatibilidad
-  webpack: (config, { isServer, webpack }) => {
-    // Solo configurar fallbacks para el cliente
+  webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -52,7 +46,6 @@ const nextConfig = {
       };
     }
 
-    // Configuración para archivos WASM y binarios
     config.module.rules.push({
       test: /\.wasm$/,
       type: 'asset/resource',
@@ -63,13 +56,10 @@ const nextConfig = {
       type: 'asset/resource',
     });
 
-    // Excluir @imgly/background-removal del servidor
     if (isServer) {
-      config.externals = config.externals || [];
-      config.externals.push('@imgly/background-removal');
+      config.externals = [...(config.externals || []), '@imgly/background-removal'];
     }
 
-    // Configuración para manejar import.meta en @imgly/background-removal
     config.module.rules.push({
       test: /\.m?js$/,
       resolve: {
@@ -77,16 +67,8 @@ const nextConfig = {
       },
     });
 
-    // Plugin para reemplazar import.meta.url
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        'import.meta.url': JSON.stringify(''),
-      })
-    );
-
     return config;
   },
-  // Headers para CORS
   async headers() {
     return [
       {

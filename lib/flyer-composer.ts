@@ -1,4 +1,4 @@
-// Importación dinámica para evitar problemas de SSR
+import { removeBackgroundClient } from './background-removal-client';
 
 /**
  * Servicio para componer flyers personalizados usando Canvas HTML5
@@ -18,6 +18,8 @@ export class FlyerComposerService {
             console.log('📋 Detalles:', details);
         }
     }
+
+
 
     /**
      * Carga una imagen desde una URL o File
@@ -45,16 +47,7 @@ export class FlyerComposerService {
         this.logOperation('Iniciando eliminación de fondo con IA');
 
         try {
-            // Importación dinámica para evitar problemas de SSR
-            const { removeBackground } = await import('@imgly/background-removal');
-            
-            const result = await removeBackground(imageFile, {
-                model: 'isnet', // Usar modelo isnet para mejor calidad
-                output: {
-                    format: 'image/png',
-                    quality: 0.9
-                }
-            });
+            const result = await removeBackgroundClient(imageFile);
 
             this.logOperation('Fondo eliminado exitosamente', {
                 originalSize: imageFile.size,
@@ -68,10 +61,6 @@ export class FlyerComposerService {
         }
     }
 
-
-
-
-
     /**
      * Genera el flyer personalizado
      */
@@ -79,6 +68,10 @@ export class FlyerComposerService {
         userPhoto: File,
         participantName: string = ''
     ): Promise<string> {
+        if (typeof window === 'undefined') {
+            throw new Error('Esta funcionalidad solo está disponible en el navegador');
+        }
+
         this.logOperation('Iniciando generación de flyer personalizado', {
             participantName,
             photoSize: userPhoto.size,
@@ -86,19 +79,14 @@ export class FlyerComposerService {
         });
 
         try {
-            // Paso 1: Eliminar el fondo de la foto del usuario usando IA
             const userPhotoNoBackground = await this.removeBackgroundWithAI(userPhoto);
-
-            // Paso 2: Cargar las imágenes
             const templateImg = await this.loadImage('/flyer-template-hack-cis.jpg');
 
-            // Convertir el Blob a File para compatibilidad
             const userPhotoFile = new File([userPhotoNoBackground], 'processed-photo.png', {
                 type: 'image/png'
             });
             const userImg = await this.loadImage(userPhotoFile);
 
-            // Crear canvas principal con el tamaño del template (1:1)
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
 
@@ -106,7 +94,6 @@ export class FlyerComposerService {
                 throw new Error('No se pudo crear el contexto del canvas');
             }
 
-            // Configurar dimensiones del template vertical (1080x1920)
             canvas.width = 1080;
             canvas.height = 1920;
 
@@ -115,17 +102,13 @@ export class FlyerComposerService {
                 height: canvas.height
             });
 
-            // Dibujar el template base
             ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);
 
-            // Configurar dimensiones y posición exacta para la foto del usuario
-            // Coordenadas específicas: Width (306px-770px), Height (640px-1085px)
             const photoX = 306;
             const photoY = 640;
-            const photoWidth = 770 - 306; // 464px
-            const photoHeight = 1085 - 640; // 445px
+            const photoWidth = 770 - 306;
+            const photoHeight = 1085 - 640;
 
-            // Dibujar la foto sin fondo directamente en el canvas principal
             ctx.drawImage(userImg, photoX, photoY, photoWidth, photoHeight);
 
             this.logOperation('Foto integrada', {
@@ -135,19 +118,15 @@ export class FlyerComposerService {
                 photoHeight
             });
 
-            // Agregar el nombre si se proporciona
             if (participantName.trim()) {
-                // Posición exacta del nombre: 1152px desde arriba, centrado horizontalmente
                 const nameY = 1152;
-                const nameX = canvas.width / 2; // Centrado horizontalmente
+                const nameX = canvas.width / 2;
 
-                // Configurar texto del nombre (sin background, color oscuro, negrita)
-                ctx.fillStyle = '#1a1a1a'; // Color oscuro
-                ctx.font = 'bold 48px Arial, sans-serif'; // Fuente grande y negrita
+                ctx.fillStyle = '#1a1a1a';
+                ctx.font = 'bold 48px Arial, sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
-                // Dibujar el nombre en mayúsculas
                 ctx.fillText(participantName.toUpperCase(), nameX, nameY);
 
                 this.logOperation('Nombre agregado', {
@@ -159,7 +138,6 @@ export class FlyerComposerService {
                 });
             }
 
-            // Convertir canvas a blob URL
             return new Promise((resolve, reject) => {
                 canvas.toBlob((blob) => {
                     if (blob) {
@@ -212,7 +190,7 @@ export class FlyerComposerService {
     static getUsageStats() {
         return {
             totalRequests: this.requestCount,
-            isConfigured: true, // Siempre configurado ya que usa Canvas + IA
+            isConfigured: true,
             method: 'Canvas HTML5 + AI Background Removal'
         };
     }
