@@ -1,20 +1,24 @@
 "use client"
 
+import dynamic from "next/dynamic"
 import FloatingParticles from "@/components/floating-particles"
-import SplineScene from "@/components/spline-scene"
 import Navigation from "@/components/sections/navigation"
 import HeroSection from "@/components/sections/hero-section"
 import SponsorsSection from "@/components/sections/sponsors-section"
 import JudgesSection from "@/components/sections/judges-section"
 import DetailsSection from "@/components/sections/details-section"
-import AgendaSection from "@/components/sections/agenda-section"
-import EvaluationSection from "@/components/sections/evaluation-section"
-import ProjectSubmissionsSection from "@/components/sections/project-submissions-section"
 import FAQSection from "@/components/sections/faq-section"
 import SponsorshipSection from "@/components/sections/sponsorship-section"
-import EventDetailsSection from "@/components/sections/event-details-section"
 import CTASection from "@/components/sections/cta-section"
 import Footer from "@/components/sections/footer"
+
+// Cargar Spline de forma diferida para no bloquear el FCP
+const SplineScene = dynamic(() => import("@/components/spline-scene"), {
+  ssr: false,
+  loading: () => (
+    <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-black to-gray-900" />
+  ),
+})
 
 export default function HackCISMinimal() {
   return (
