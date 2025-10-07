@@ -21,7 +21,6 @@ const nextConfig = {
     serverComponentsExternalPackages: [
       '@imgly/background-removal',
     ],
-    esmExternals: 'loose',
   },
   // Configuración para librerías que requieren transpilación
   transpilePackages: [
@@ -30,7 +29,7 @@ const nextConfig = {
     'three',
   ],
   // Configuración de webpack para compatibilidad
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, webpack }) => {
     // Solo configurar fallbacks para el cliente
     if (!isServer) {
       config.resolve.fallback = {
@@ -70,6 +69,21 @@ const nextConfig = {
       config.externals.push('@imgly/background-removal');
     }
 
+    // Configuración para manejar import.meta en @imgly/background-removal
+    config.module.rules.push({
+      test: /\.m?js$/,
+      resolve: {
+        fullySpecified: false,
+      },
+    });
+
+    // Plugin para reemplazar import.meta.url
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'import.meta.url': JSON.stringify(''),
+      })
+    );
+
     return config;
   },
   // Headers para CORS
@@ -90,8 +104,6 @@ const nextConfig = {
       },
     ];
   },
-  // Configuración de salida para Vercel
-  output: 'standalone',
 }
 
 export default nextConfig
