@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -421,7 +422,14 @@ export default function RegisterPage() {
       {/* Header */}
       <nav className="relative z-10 p-4 sm:p-6 flex justify-between items-center max-w-7xl mx-auto w-full flex-shrink-0">
         <div className="text-xl sm:text-2xl font-bold">
-          <GradientText>Hack[CIS]</GradientText>
+          <Image
+                    src="/images/Logo-cis.webp"
+                    alt="Hack CIS"
+                    width={180}
+                    height={60}
+                    priority
+                    className="h-12 w-auto"
+          />
         </div>
         <a href="/" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">
           Volver al inicio

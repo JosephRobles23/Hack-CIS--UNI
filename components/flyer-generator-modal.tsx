@@ -71,15 +71,15 @@ export default function FlyerGeneratorModal({
             let progress = 0
             const interval = setInterval(() => {
                 progress += Math.random() * 10 + 3 // Incremento aleatorio entre 3-13%
-                
+
                 if (progress >= 95) {
                     progress = 95 // Dejar en 95% hasta que termine realmente
                     clearInterval(interval)
                 }
-                
+
                 setGenerationProgress(Math.min(progress, 95))
             }, 200)
-            
+
             return interval
         }
 
@@ -111,7 +111,7 @@ export default function FlyerGeneratorModal({
             clearInterval(progressInterval)
             setGenerationProgress(0)
             setStep('preview') // Volver al preview en caso de error
-            
+
             console.error('Error generando flyer:', error)
             toast({
                 title: "Error al generar flyer",
@@ -158,28 +158,59 @@ export default function FlyerGeneratorModal({
     const handleShare = async () => {
         if (!generatedFlyerUrl) return
 
-        if (navigator.share) {
-            try {
+        try {
+            // Convertir el blob URL a un archivo para compartir
+            const response = await fetch(generatedFlyerUrl)
+            const blob = await response.blob()
+            const fileName = `hack-cis-2025-${participantName.replace(/\s+/g, '-').toLowerCase()}.png`
+            const file = new File([blob], fileName, { type: 'image/png' })
+
+            // Verificar si el navegador soporta Web Share API con archivos
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
                 await navigator.share({
                     title: 'Mi flyer para Hack[CIS] 2025',
                     text: `¡Estoy participando en Hack[CIS] 2025! 🚀 #HackCIS2025`,
-                    url: generatedFlyerUrl
+                    files: [file]
                 })
-            } catch (error) {
-                // Usuario canceló o error en share
-            }
-        } else {
-            // Fallback: copiar URL al clipboard
-            try {
-                await navigator.clipboard.writeText(generatedFlyerUrl)
+                
                 toast({
-                    title: "¡Copiado! 📋",
-                    description: "El enlace se copió al portapapeles",
+                    title: "¡Compartido! 🎉",
+                    description: "Tu flyer se compartió exitosamente",
                 })
-            } catch (error) {
+            } else if (navigator.share) {
+                // Fallback: compartir solo texto (algunos navegadores no soportan archivos)
+                await navigator.share({
+                    title: 'Mi flyer para Hack[CIS] 2025',
+                    text: `¡Estoy participando en Hack[CIS] 2025! 🚀 #HackCIS2025\n\nDescarga tu flyer en: ${window.location.origin}`,
+                })
+                
+                toast({
+                    title: "Compartido 📱",
+                    description: "Descarga la imagen para compartirla en redes sociales",
+                })
+            } else {
+                // Fallback para escritorio: descargar automáticamente
+                const url = window.URL.createObjectURL(blob)
+                const link = document.createElement('a')
+                link.href = url
+                link.download = fileName
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+                window.URL.revokeObjectURL(url)
+
+                toast({
+                    title: "Imagen descargada 💾",
+                    description: "Comparte la imagen desde tu galería",
+                })
+            }
+        } catch (error) {
+            // Si el usuario cancela o hay error
+            if (error instanceof Error && error.name !== 'AbortError') {
+                console.error('Error al compartir:', error)
                 toast({
                     title: "Error al compartir",
-                    description: "No se pudo copiar el enlace",
+                    description: "Intenta descargar la imagen manualmente",
                     variant: "destructive"
                 })
             }
@@ -302,7 +333,7 @@ export default function FlyerGeneratorModal({
                                     Generando tu flyer 🎨
                                 </h3>
                                 <p className="text-gray-400">
-                                    Eliminando fondo con IA y creando tu flyer personalizado...
+                                    Creando tu flyer personalizado...
                                 </p>
                             </div>
 
@@ -343,12 +374,12 @@ export default function FlyerGeneratorModal({
                                         </div>
                                     </div>
                                     <div className="text-center">
-                                        <p className="text-cyan-400 font-medium">Procesando con IA...</p>
+                                        <p className="text-cyan-400 font-medium">Procesando...</p>
                                         <p className="text-sm text-gray-400">
-                                            {generationProgress < 30 ? 'Eliminando fondo de la imagen' :
-                                             generationProgress < 70 ? 'Componiendo el flyer' :
-                                             generationProgress < 95 ? 'Aplicando efectos finales' :
-                                             'Finalizando...'}
+                                            {generationProgress < 30 ? 'Cargando tu imagen' :
+                                                generationProgress < 70 ? 'Componiendo el flyer' :
+                                                    generationProgress < 95 ? 'Aplicando efectos finales' :
+                                                        'Finalizando...'}
                                         </p>
                                     </div>
                                 </div>
@@ -363,7 +394,7 @@ export default function FlyerGeneratorModal({
                                     ¡Tu flyer está listo! 🔥
                                 </h3>
                                 <p className="text-gray-400">
-                                    Compártelo en tus redes sociales y etiquetanos en @ieeecisuni 
+                                    Compártelo en tus redes sociales y etiquetanos en @ieeecisuni
                                 </p>
                             </div>
 

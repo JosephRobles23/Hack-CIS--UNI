@@ -1,8 +1,6 @@
-import { removeBackgroundClient } from './background-removal-client';
-
 /**
  * Servicio para componer flyers personalizados usando Canvas HTML5
- * Elimina el background de la foto del usuario usando IA y la integra con el template
+ * Monta la foto del usuario directamente en el template
  */
 export class FlyerComposerService {
     private static requestCount = 0;
@@ -18,8 +16,6 @@ export class FlyerComposerService {
             console.log('📋 Detalles:', details);
         }
     }
-
-
 
     /**
      * Carga una imagen desde una URL o File
@@ -41,27 +37,6 @@ export class FlyerComposerService {
     }
 
     /**
-     * Elimina el background de una imagen usando IA avanzada
-     */
-    private static async removeBackgroundWithAI(imageFile: File): Promise<Blob> {
-        this.logOperation('Iniciando eliminación de fondo con IA');
-
-        try {
-            const result = await removeBackgroundClient(imageFile);
-
-            this.logOperation('Fondo eliminado exitosamente', {
-                originalSize: imageFile.size,
-                resultSize: result.size
-            });
-
-            return result;
-        } catch (error) {
-            this.logOperation('Error eliminando fondo', { error });
-            throw new Error('No se pudo eliminar el fondo de la imagen');
-        }
-    }
-
-    /**
      * Genera el flyer personalizado
      */
     static async generatePersonalizedFlyer(
@@ -79,13 +54,9 @@ export class FlyerComposerService {
         });
 
         try {
-            const userPhotoNoBackground = await this.removeBackgroundWithAI(userPhoto);
-            const templateImg = await this.loadImage('/flyer-template-hack-cis.jpg');
-
-            const userPhotoFile = new File([userPhotoNoBackground], 'processed-photo.png', {
-                type: 'image/png'
-            });
-            const userImg = await this.loadImage(userPhotoFile);
+            // Cargar las imágenes directamente
+            const templateImg = await this.loadImage('/flyer-template-hack-cis.png');
+            const userImg = await this.loadImage(userPhoto);
 
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
@@ -104,18 +75,49 @@ export class FlyerComposerService {
 
             ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);
 
+            // Configurar dimensiones y posición para la foto del usuario
             const photoX = 306;
             const photoY = 640;
-            const photoWidth = 770 - 306;
-            const photoHeight = 1085 - 640;
+            const photoWidth = 770 - 306; // 464px
+            const photoHeight = 1085 - 640; // 445px
 
-            ctx.drawImage(userImg, photoX, photoY, photoWidth, photoHeight);
+            // Calcular aspect ratio para mantener proporciones (cover)
+            const targetAspect = photoWidth / photoHeight;
+            const imageAspect = userImg.width / userImg.height;
+
+            let drawWidth = photoWidth;
+            let drawHeight = photoHeight;
+            let drawX = photoX;
+            let drawY = photoY;
+
+            if (imageAspect > targetAspect) {
+                // Imagen más ancha - ajustar por altura
+                drawWidth = photoHeight * imageAspect;
+                drawX = photoX - (drawWidth - photoWidth) / 2;
+            } else {
+                // Imagen más alta - ajustar por ancho
+                drawHeight = photoWidth / imageAspect;
+                drawY = photoY - (drawHeight - photoHeight) / 2;
+            }
+
+            // Recortar el área para que no se salga del espacio designado
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(photoX, photoY, photoWidth, photoHeight);
+            ctx.clip();
+
+            // Dibujar la foto del usuario
+            ctx.drawImage(userImg, drawX, drawY, drawWidth, drawHeight);
+
+            ctx.restore();
 
             this.logOperation('Foto integrada', {
                 photoX,
                 photoY,
                 photoWidth,
-                photoHeight
+                photoHeight,
+                imageAspect: imageAspect.toFixed(2),
+                targetAspect: targetAspect.toFixed(2)
             });
 
             if (participantName.trim()) {
@@ -191,7 +193,7 @@ export class FlyerComposerService {
         return {
             totalRequests: this.requestCount,
             isConfigured: true,
-            method: 'Canvas HTML5 + AI Background Removal'
+            method: 'Canvas HTML5'
         };
     }
 

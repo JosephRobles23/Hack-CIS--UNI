@@ -16,9 +16,6 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    serverComponentsExternalPackages: ['@imgly/background-removal'],
-  },
   transpilePackages: [
     '@react-three/fiber',
     '@react-three/drei',
@@ -54,17 +51,6 @@ const nextConfig = {
     config.module.rules.push({
       test: /\.(bin|dat)$/,
       type: 'asset/resource',
-    });
-
-    if (isServer) {
-      config.externals = [...(config.externals || []), '@imgly/background-removal'];
-    }
-
-    config.module.rules.push({
-      test: /\.m?js$/,
-      resolve: {
-        fullySpecified: false,
-      },
     });
 
     return config;
