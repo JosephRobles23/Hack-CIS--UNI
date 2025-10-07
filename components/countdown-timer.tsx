@@ -17,8 +17,20 @@ export default function CountdownTimer() {
     minutes: 0,
     seconds: 0,
   })
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
+    // Detectar si es mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640) // sm breakpoint de Tailwind
+    }
+
+    // Verificar al montar
+    checkMobile()
+
+    // Escuchar cambios de tamaño
+    window.addEventListener('resize', checkMobile)
+
     // 02/10/2025 12:00:00 hora Perú (PET = UTC-5) -> UTC 17:00:00
     const targetTimestampUtc = Date.UTC(2025, 10, 2, 17, 0, 0)
 
@@ -41,10 +53,20 @@ export default function CountdownTimer() {
     // Actualizar inmediatamente y luego cada segundo
     update()
     const timer = setInterval(update, 1000)
-    return () => clearInterval(timer)
+
+    return () => {
+      clearInterval(timer)
+      window.removeEventListener('resize', checkMobile)
+    }
   }, [])
 
-  const timeUnits = [
+  // Etiquetas condicionales según el tamaño de pantalla
+  const timeUnits = isMobile ? [
+    { label: "Days", value: timeLeft.days },
+    { label: "Hrs", value: timeLeft.hours },
+    { label: "Min", value: timeLeft.minutes },
+    { label: "Seg", value: timeLeft.seconds },
+  ] : [
     { label: "Días", value: timeLeft.days },
     { label: "Horas", value: timeLeft.hours },
     { label: "Minutos", value: timeLeft.minutes },
@@ -52,13 +74,13 @@ export default function CountdownTimer() {
   ]
 
   return (
-    <div className="mb-8">
+    <div className="mb-6">
       {/* Countdown Display */}
-      <div className="grid grid-cols-4 gap-1 flex justify-center sm:gap-4 max-w-sm sm:max-w-md mx-auto">
+      <div className="grid grid-cols-4 gap-2 flex justify-center sm:gap-4 max-w-[16rem] sm:max-w-md mx-auto">
         {timeUnits.map((unit, index) => (
           <div
             key={unit.label}
-            className="text-center p-2 sm:p-4 rounded-lg sm:rounded-xl border border-white/10"
+            className="text-center p-1 sm:p-4 rounded-lg sm:rounded-xl border border-white/10"
             style={{ backgroundColor: "#000000" }}
           >
             <div

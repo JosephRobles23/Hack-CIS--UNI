@@ -8,6 +8,11 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'Hack[CIS]',
   description: 'HackCIS.start({ time: "120H", prize: "S/2K" });',
+  icons: {
+    icon: '/images/favicon-hack.webp',
+    shortcut: '/images/favicon-hack.webp',
+    apple: '/images/favicon-hack.webp',
+  },
 }
 
 export default function RootLayout({
@@ -18,9 +23,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="https://i.postimg.cc/PqYBWw7b/LOGO-CIS-UNI-SIN-FONDO.png" />
-        <link rel="shortcut icon" href="https://i.postimg.cc/PqYBWw7b/LOGO-CIS-UNI-SIN-FONDO.png" />
-        <link rel="apple-touch-icon" href="https://i.postimg.cc/PqYBWw7b/LOGO-CIS-UNI-SIN-FONDO.png" />
         <style>{`
 html {
   font-family: ${GeistSans.style.fontFamily};

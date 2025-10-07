@@ -9,7 +9,7 @@ import TypewriterText from "@/components/typewriter-text"
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex flex-col justify-between px-6 mt-4 mb-8 pointer-events-none">
+    <section className="relative min-h-screen flex flex-col justify-between px-6 mt-8 sm:mt-3 mb-8 pointer-events-none">
       {/* Línea de tecnologías - Posición fija arriba */}
       <div className="relative z-20 max-w-4xl mx-auto text-center pointer-events-none">
         <div className="text-sm uppercase tracking-widest text-gray-500">
@@ -18,17 +18,17 @@ export default function HeroSection() {
       </div>
 
       {/* Spacer para empujar el contenido hacia abajo - TRANSPARENTE AL SPLINE */}
-      <div className="flex-1 pointer-events-none"></div>
+      <div className="flex-1"></div>
 
       {/* Contador - VISIBLE PERO TRANSPARENTE AL SPLINE */}
-      <div className="relative pt-0 pointer-events-none">
+      <div className="relative pt-0 ">
         <div className="relative z-20">
           <CountdownTimer />
         </div>
       </div>
 
       {/* Botones y contador - Posición más abajo */}
-      <div className="relative z-30 max-w-4xl mx-auto text-center space-y-4 pb-40 mb-20 pointer-events-none">
+      <div className="relative z-30 max-w-4xl mx-auto text-center space-y-4 mb-60 pb-20 sm:pb-40 sm:mb-20 pointer-events-none">
         {/* Solo el botón Registrarse es clickeable */}
         <div className="relative flex justify-center pb-10">
           <Link href="/register" className="relative z-50 pointer-events-auto">
@@ -38,36 +38,6 @@ export default function HeroSection() {
             </NeonButton>
           </Link>
         </div>
-
-
-        {/* Stats adicionales (comentadas por ahora) */}
-        {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-8">
-          <HackerCounter />
-          <div className="text-center">
-            <div className="text-3xl font-bold">
-              <GradientText gradient="from-green-400 to-blue-400">
-                <AnimatedCounter end={120} />H
-              </GradientText>
-            </div>
-            <div className="text-gray-500 text-sm uppercase tracking-wider">Duración</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold">
-              <GradientText gradient="from-yellow-400 to-red-400">
-                <AnimatedCounter end={2} prefix="S/" suffix="K" />
-              </GradientText>
-            </div>
-            <div className="text-gray-500 text-sm uppercase tracking-wider">Premios</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold">
-              <GradientText gradient="from-purple-400 to-pink-400">
-                <AnimatedCounter end={6} />
-              </GradientText>
-            </div>
-            <div className="text-gray-500 text-sm uppercase tracking-wider">Mentores</div>
-          </div>
-        </div> */}
       </div>
     </section>
   )
