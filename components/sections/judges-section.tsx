@@ -105,9 +105,9 @@ export default function JudgesSection() {
     // Velocidad de desplazamiento más lenta en móviles
     const getScrollSpeed = () => {
       if (typeof window !== 'undefined' && window.innerWidth < 768) {
-        return 0.1; // Más lento en móviles
+        return 0.5; // Más lento en móviles
       }
-      return 0.8; // Velocidad normal en desktop
+      return 0.05; // Velocidad normal en desktop
     };
     
     const animate = () => {
