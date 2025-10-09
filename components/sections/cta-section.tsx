@@ -32,7 +32,7 @@ export default function CTASection() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <a href="https://drive.google.com/file/d/1B1XU0xIvq4WSsQp8uAmItQdgNuzrT66q/view?usp=sharing" target="_blank" rel="noopener noreferrer">
+            <a href="https://drive.google.com/file/d/1XCwglxajS2MlOkB4rYNrfrvLoVWbqsg6/view?usp=sharing" target="_blank" rel="noopener noreferrer">
               <NeonButton variant="primary" size="lg">
                 <BookOpen className="mr-2 h-6 w-6" />
                 Bases de la Hack
