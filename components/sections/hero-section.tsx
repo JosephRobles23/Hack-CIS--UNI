@@ -23,7 +23,7 @@ export default function HeroSection() {
       } else if (width >= 400 && width <= 409) {
         setMarginBottom("mb-[18rem]")
       } else if (width >= 390 && width <= 399) {
-        setMarginBottom("mb-[17rem]")
+        setMarginBottom("mb-[12rem]")
       } else if (width >= 375 && width <= 389) {
         setMarginBottom("mb-[10.5rem]")
       } else {
