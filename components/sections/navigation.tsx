@@ -7,10 +7,10 @@ export default function Navigation() {
         <Image
           src="/images/Logo-cis.webp"
           alt="Hack CIS"
-          width={180}
-          height={60}
+          width={150}
+          height={50}
           priority
-          className="h-12 w-auto"
+          className="h-11 w-auto"
         />
       </div>
       {/* <div className="hidden md:flex items-center space-x-8">
