@@ -3,21 +3,10 @@
 import { useEffect, useState } from "react"
 
 export default function SplineScene() {
-  const [isMobile, setIsMobile] = useState<boolean | null>(null)
   const [isLoaded, setIsLoaded] = useState(false)
   const [scriptLoaded, setScriptLoaded] = useState(false)
 
   useEffect(() => {
-    // Detectar si es mobile de forma síncrona para evitar re-renders
-    const checkMobile = () => {
-      const mobile = window.innerWidth < 480
-      setIsMobile(mobile)
-      return mobile
-    }
-
-    // Verificar al montar
-    const mobile = checkMobile()
-
     // Cargar el script de Spline de forma diferida (después del FCP)
     const loadSplineScript = () => {
       if (!document.querySelector('script[src*="spline-viewer.js"]')) {
@@ -54,33 +43,18 @@ export default function SplineScene() {
       }, 500)
     }
 
-    // Escuchar cambios de tamaño de ventana
-    const handleResize = () => {
-      const newMobile = window.innerWidth < 480
-      if (newMobile !== mobile) {
-        setIsMobile(newMobile)
-      }
-    }
-
-    window.addEventListener('resize', handleResize)
-
     return () => {
       if ('requestIdleCallback' in window) {
         window.cancelIdleCallback(timer as number)
       } else {
         clearTimeout(timer as NodeJS.Timeout)
       }
-      window.removeEventListener('resize', handleResize)
     }
   }, [])
 
-  // URL condicional según el tamaño de pantalla
-  const splineUrl = isMobile
-    ? "https://prod.spline.design/nwDJJPY243nnG6aM/scene.splinecode" // Mobile
-    : "https://prod.spline.design/I7nVGHVBvrdSDSPs/scene.splinecode" // Desktop
+  const splineUrl = "https://prod.spline.design/Davqd-NY56s68KP7/scene.splinecode"
 
-  // Estilos condicionales según el tamaño de pantalla
-  const splineStyles: React.CSSProperties = isMobile ? {
+  const splineStyles: React.CSSProperties = {
     width: '100dvw',
     height: '100dvh',
     minWidth: '1920px',
@@ -93,23 +67,10 @@ export default function SplineScene() {
     position: 'absolute',
     pointerEvents: 'auto',
     zIndex: '1'
-  } : {
-    width: '100dvw',
-    height: '100dvh',
-    minWidth: '1920px',
-    minHeight: '1080px',
-    opacity: '1',
-    objectFit: 'cover',
-    transform: 'translate(-50%, -50%)',
-    left: '50%',
-    top: '50%',
-    position: 'absolute',
-    pointerEvents: 'auto',
-    zIndex: '1'
   }
 
   // Mostrar un fondo de respaldo mientras carga
-  if (!isLoaded || isMobile === null) {
+  if (!isLoaded) {
     return (
       <div className="absolute inset-0 w-full h-full overflow-hidden bg-black">
         {/* Fondo de respaldo con gradiente */}
@@ -132,7 +93,6 @@ export default function SplineScene() {
       {/* Spline Viewer Embebido - Fondo interactivo */}
       <div className="absolute inset-0 flex items-center justify-center">
         <spline-viewer
-          key={splineUrl}
           url={splineUrl}
           style={splineStyles}
           loading="lazy"
