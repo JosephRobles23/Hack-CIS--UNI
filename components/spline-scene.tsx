@@ -87,7 +87,7 @@ export default function SplineScene() {
     minHeight: '1080px',
     opacity: '1',
     objectFit: 'cover',
-    transform: 'translate(-50%, -55%) scale(0.75)',
+    transform: 'translate(-50%, -55%) scale(0.70)',
     left: '50%',
     top: '50%',
     position: 'absolute',
