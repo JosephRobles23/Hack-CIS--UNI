@@ -58,7 +58,7 @@ const duplicatedJudges = [...judges, ...judges, ...judges, ...judges];
 export default function JudgesSection() {
   const { ref: headerRef, isIntersecting: headerVisible } = useIntersectionObserver()
   const { ref: judgesRef, isIntersecting: judgesVisible } = useIntersectionObserver()
-  
+
   const [isPaused, setIsPaused] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -73,21 +73,21 @@ export default function JudgesSection() {
     }
     return 2; // default para SSR
   };
-  
+
   const [visibleItems, setVisibleItems] = useState(getVisibleItems());
-  
+
   // Actualizar visibleItems en cambios de tamaño de ventana
   useEffect(() => {
     const handleResize = () => {
       setVisibleItems(getVisibleItems());
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     // Establecer el estado inicial de isMobile
     if (typeof window !== 'undefined') {
       setIsMobile(window.innerWidth < 768);
     }
-    
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -101,7 +101,7 @@ export default function JudgesSection() {
 
     let animationFrameId: number;
     let isResetting = false;
-    
+
     // Velocidad de desplazamiento más lenta en móviles
     const getScrollSpeed = () => {
       if (typeof window !== 'undefined' && window.innerWidth < 768) {
@@ -109,7 +109,7 @@ export default function JudgesSection() {
       }
       return 0.05; // Velocidad normal en desktop
     };
-    
+
     const animate = () => {
       setScrollPosition(prevPos => {
         // Si hemos desplazado más allá del ancho total, preparar para reiniciar suavemente
@@ -127,14 +127,14 @@ export default function JudgesSection() {
         }
         return prevPos + getScrollSpeed(); // Incremento adaptativo
       });
-      
+
       if (!isResetting) {
         animationFrameId = requestAnimationFrame(animate);
       }
     };
-    
+
     animationFrameId = requestAnimationFrame(animate);
-    
+
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
@@ -148,8 +148,8 @@ export default function JudgesSection() {
   // Estilo para el contenedor que se desplaza - diferentes configuraciones para móvil y desktop
   const scrollerStyle = {
     transform: `translateX(-${scrollPosition}%)`,
-    width: isMobile 
-      ? `${duplicatedJudges.length *6}%` // Estilo móvil - más amplio para dar espacio a cada tarjeta
+    width: isMobile
+      ? `${duplicatedJudges.length * 6}%` // Estilo móvil - más amplio para dar espacio a cada tarjeta
       : `${(duplicatedJudges.length / visibleItems) * 50}%`, // Estilo desktop - similar a TestimonialsSection
   };
 
@@ -226,25 +226,29 @@ export default function JudgesSection() {
               }`}
           >
             {/* Wrapper para el carrusel con padding específico para móvil */}
-            <div className="px-2 sm:px-0">
-              <div 
-                className="overflow-hidden relative mx-auto max-w-[100%] sm:max-w-full rounded-lg"
+            <div className="px-2 sm:px-0 relative">
+              {/* Efecto de desvanecimiento en el borde izquierdo - Fijo */}
+              <div className="absolute left-2 sm:left-0 top-0 bottom-0 w-8 sm:w-12 md:w-20 bg-gradient-to-r from-black to-transparent z-20 pointer-events-none"></div>
+
+              <div
+                className="overflow-x-auto overflow-y-hidden relative mx-auto max-w-[100%] sm:max-w-full rounded-lg scrollbar-hide"
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
                 onTouchStart={() => setIsPaused(true)}
                 onTouchEnd={() => setTimeout(() => setIsPaused(false), 2000)}
                 ref={carouselRef}
+                style={{
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none',
+                }}
               >
-                {/* Efecto de desvanecimiento en el borde izquierdo */}
-                <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 md:w-20 bg-gradient-to-r from-black to-transparent z-10"></div>
-                
-                <div 
+                <div
                   className="flex transition-transform duration-200 ease-linear py-4 md:py-6"
                   style={scrollerStyle}
                 >
                   {duplicatedJudges.map((judge, index) => (
-                    <div 
-                      key={`${judge.id}-${index}`} 
+                    <div
+                      key={`${judge.id}-${index}`}
                       className="flex-shrink-0 px-2 py-10 sm:px-3 md:px-4"
                       style={getItemWidth()}
                     >
@@ -267,10 +271,10 @@ export default function JudgesSection() {
                     </div>
                   ))}
                 </div>
-                
-                {/* Efecto de desvanecimiento en el borde derecho */}
-                <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 md:w-20 bg-gradient-to-l from-black to-transparent z-10"></div>
               </div>
+
+              {/* Efecto de desvanecimiento en el borde derecho - Fijo */}
+              <div className="absolute right-2 sm:right-0 top-0 bottom-0 w-8 sm:w-12 md:w-20 bg-gradient-to-l from-black to-transparent z-20 pointer-events-none"></div>
             </div>
           </div>
         </div>
@@ -289,6 +293,15 @@ export default function JudgesSection() {
         }
         .animate-fade-in-up {
           animation: fade-in-up 0.8s ease-out forwards;
+        }
+        
+        /* Ocultar scrollbar en todos los navegadores */
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
       `}</style>
     </section>
