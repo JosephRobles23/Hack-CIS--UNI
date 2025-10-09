@@ -16,7 +16,9 @@ export default function HeroSection() {
     const updateMargin = () => {
       const width = window.innerWidth
 
-      if (width >= 410) {
+      if (width >= 426) {
+        setMarginBottom("mb-[17rem]")
+      } else if (width >= 410 && width <= 425) {
         setMarginBottom("mb-[19rem]")
       } else if (width >= 400 && width <= 409) {
         setMarginBottom("mb-[18rem]")
