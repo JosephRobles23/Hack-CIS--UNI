@@ -16,14 +16,16 @@ export default function HeroSection() {
     const updateMargin = () => {
       const width = window.innerWidth
 
-      if (width >= 426) {
-        setMarginBottom("mb-[19rem]")
+      if (width >= 431) {
+        setMarginBottom("mb-[12rem]")
+      } else if (width >= 426 && width <= 430) {
+        setMarginBottom("mb-[12rem]")
       } else if (width >= 410 && width <= 425) {
-        setMarginBottom("mb-[19rem]")
+        setMarginBottom("mb-[14rem]")
       } else if (width >= 400 && width <= 409) {
-        setMarginBottom("mb-[18rem]")
+        setMarginBottom("mb-[13rem]")
       } else if (width >= 390 && width <= 399) {
-        setMarginBottom("mb-[16rem]")
+        setMarginBottom("mb-[12rem]")
       } else if (width >= 375 && width <= 389) {
         setMarginBottom("mb-[10.5rem]")
       } else {
