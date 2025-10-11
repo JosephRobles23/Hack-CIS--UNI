@@ -11,36 +11,75 @@ import NeonButton from "@/components/neon-button"
 
 export default function HeroSection() {
   const [marginBottom, setMarginBottom] = useState("mb-[19rem]")
+  const [marginBottomDesktop, setMarginBottomDesktop] = useState("pb-[15rem]")
 
   useEffect(() => {
-    const updateMargin = () => {
+    const updateSpacing = () => {
       const width = window.innerWidth
 
-      if (width >= 431) {
+      // Desktop Extra Grande (1920px+)
+      if (width >= 1600) {
         setMarginBottom("mb-[12rem]")
-      } else if (width >= 426 && width <= 430) {
+        setMarginBottomDesktop("sm:mb-[30rem]")
+      }
+      // Desktop Grande (1536px - 1919px)
+      else if (width >= 1536 && width <= 1599) {
         setMarginBottom("mb-[12rem]")
-      } else if (width >= 410 && width <= 425) {
+        setMarginBottomDesktop("sm:mb-[20rem]")
+      }
+      // Desktop Estándar / Laptop Grande (1280px - 1535px)
+      else if (width >= 1280 && width <= 1535) {
+        setMarginBottom("mb-[12rem]")
+        setMarginBottomDesktop("sm:mb-[20rem]")
+      }
+      // Laptop Pequeña (1024px - 1279px)
+      else if (width >= 1024 && width <= 1279) {
+        setMarginBottom("mb-[12rem]")
+        setMarginBottomDesktop("sm:mb-[25rem]")
+      }
+      // Tablet / iPad (768px - 1023px)
+      else if (width >= 768 && width <= 1023) {
+        setMarginBottom("mb-[12rem]")
+        setMarginBottomDesktop("sm:mb-[2rem]")
+      }
+      // Tablet Pequeña / Móvil Grande (431px - 767px)
+      else if (width >= 431 && width <= 767) {
+        setMarginBottom("mb-[12rem]")
+      }
+      // Móvil (426px - 430px)
+      else if (width >= 426 && width <= 430) {
+        setMarginBottom("mb-[12rem]")
+      }
+      // Móvil (410px - 425px)
+      else if (width >= 410 && width <= 425) {
         setMarginBottom("mb-[14rem]")
-      } else if (width >= 400 && width <= 409) {
+      }
+      // Móvil (400px - 409px)
+      else if (width >= 400 && width <= 409) {
         setMarginBottom("mb-[13rem]")
-      } else if (width >= 390 && width <= 399) {
+      }
+      // Móvil (390px - 399px)
+      else if (width >= 390 && width <= 399) {
         setMarginBottom("mb-[12rem]")
-      } else if (width >= 375 && width <= 389) {
+      }
+      // Móvil (375px - 389px)
+      else if (width >= 375 && width <= 389) {
         setMarginBottom("mb-[10.5rem]")
-      } else {
+      }
+      // Móvil Pequeño (< 375px)
+      else {
         setMarginBottom("mb-[13rem]")
       }
     }
 
     // Actualizar al montar
-    updateMargin()
+    updateSpacing()
 
     // Escuchar cambios de tamaño
-    window.addEventListener('resize', updateMargin)
+    window.addEventListener('resize', updateSpacing)
 
     return () => {
-      window.removeEventListener('resize', updateMargin)
+      window.removeEventListener('resize', updateSpacing)
     }
   }, [])
   return (
@@ -68,16 +107,16 @@ export default function HeroSection() {
       </div>
 
       {/* Botones y contador - Posición más abajo */}
-      <div className={`relative z-30 max-w-4xl mx-auto text-center space-y-4 ${marginBottom} sm:pb-[15rem] sm:mb-20 pointer-events-none`}>
-        {/* Botón Liquid Glass Registrarse */}
-        {/* <div className="relative flex justify-center pb-10">
+      <div className={`relative z-50 max-w-4xl mx-auto text-center space-y-4 ${marginBottom} ${marginBottomDesktop}`}>
+        {/* Botón Liquid Glass Registrarse - Solo Mobile */}
+        <div className="relative flex justify-center pb-10 md:hidden">
           <Link href="/register" className="relative z-50 pointer-events-auto">
             <LiquidGlassButton variant="primary" size="md">
                 <Sparkles className="w-4 sm:h-5 sm:w-5" />
               <GradientText gradient="from-yellow-400 to-red-400 font-neue-power">Registrarse</GradientText>
             </LiquidGlassButton>
           </Link>
-        </div> */}
+        </div>
       </div>
     </section>
   )
