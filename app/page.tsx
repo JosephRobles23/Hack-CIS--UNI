@@ -60,7 +60,7 @@ export default function HackCISMinimal() {
         </div>
 
         {/* Navigation y Hero con z-index superior - VISIBLES ENCIMA */}
-        <div className="relative z-[60]">
+        <div className="relative z-[30]">
           <Navigation />
           <HeroSection />
         </div>

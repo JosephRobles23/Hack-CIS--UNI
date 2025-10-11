@@ -20,12 +20,12 @@ export default function HeroSection() {
       // Desktop Extra Grande (1920px+)
       if (width >= 1600) {
         setMarginBottom("mb-[12rem]")
-        setMarginBottomDesktop("sm:mb-[30rem]")
+        setMarginBottomDesktop("sm:mb-[24rem]")
       }
       // Desktop Grande (1536px - 1919px)
       else if (width >= 1536 && width <= 1599) {
         setMarginBottom("mb-[12rem]")
-        setMarginBottomDesktop("sm:mb-[20rem]")
+        setMarginBottomDesktop("sm:mb-[21%]")
       }
       // Desktop Estándar / Laptop Grande (1280px - 1535px)
       else if (width >= 1280 && width <= 1535) {
@@ -107,7 +107,7 @@ export default function HeroSection() {
       </div>
 
       {/* Botones y contador - Posición más abajo */}
-      <div className={`relative z-50 max-w-4xl mx-auto text-center space-y-4 ${marginBottom} ${marginBottomDesktop}`}>
+      <div className={`relative z-20 max-w-4xl mx-auto text-center space-y-4 ${marginBottom} ${marginBottomDesktop}`}>
         {/* Botón Liquid Glass Registrarse - Solo Mobile */}
         <div className="relative flex justify-center pb-10 md:hidden">
           <Link href="/register" className="relative z-50 pointer-events-auto">
