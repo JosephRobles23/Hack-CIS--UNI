@@ -32,7 +32,7 @@ export default function HackCISMinimal() {
       {/* Spline Background - Solo para Navigation y Hero */}
       <div className="relative min-h-screen">
         {/* Spline como fondo absoluto - Z-INDEX BAJO */}
-        <div className="absolute inset-0 z-10">
+        <div className="absolute inset-0 z-50">
           <SplineScene />
         </div>
 

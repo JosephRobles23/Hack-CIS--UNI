@@ -1,83 +1,43 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Spline from "@splinetool/react-spline";
+import { useRouter } from "next/navigation";
 
 export default function SplineScene() {
   const [isMobile, setIsMobile] = useState<boolean | null>(null)
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [scriptLoaded, setScriptLoaded] = useState(false)
+  const router = useRouter();
+
+  function handleSplineMouseUp(e: any) {
+    // Detectamos si el objeto clickeado es el botón
+    if (e.target.name === "Button-register") {
+      console.log("🟢 Botón 3D 'Button-register' presionado (Mouse Up)");
+      router.push("/register"); // Navega a la página /register
+    }
+  }
 
   useEffect(() => {
-    // Detectar si es mobile de forma síncrona para evitar re-renders
+    // Detectar si es mobile
     const checkMobile = () => {
-      const mobile = window.innerWidth < 480
-      setIsMobile(mobile)
-      return mobile
+      setIsMobile(window.innerWidth < 480)
     }
 
     // Verificar al montar
-    const mobile = checkMobile()
-
-    // Cargar el script de Spline de forma diferida (después del FCP)
-    const loadSplineScript = () => {
-      if (!document.querySelector('script[src*="spline-viewer.js"]')) {
-        const script = document.createElement('script')
-        script.type = 'module'
-        script.src = 'https://unpkg.com/@splinetool/viewer@1.10.74/build/spline-viewer.js'
-        script.async = true
-        script.onload = () => {
-          setScriptLoaded(true)
-          setIsLoaded(true)
-        }
-        script.onerror = () => {
-          console.warn('Failed to load Spline viewer')
-          setIsLoaded(true)
-        }
-        document.head.appendChild(script)
-      } else {
-        setScriptLoaded(true)
-        setIsLoaded(true)
-      }
-    }
-
-    // Retrasar la carga de Spline para no bloquear el FCP
-    // Usar requestIdleCallback si está disponible, sino setTimeout
-    let timer: number | NodeJS.Timeout
-
-    if ('requestIdleCallback' in window) {
-      timer = window.requestIdleCallback(() => {
-        loadSplineScript()
-      })
-    } else {
-      timer = setTimeout(() => {
-        loadSplineScript()
-      }, 500)
-    }
+    checkMobile()
 
     // Escuchar cambios de tamaño de ventana
-    const handleResize = () => {
-      const newMobile = window.innerWidth < 480
-      if (newMobile !== mobile) {
-        setIsMobile(newMobile)
-      }
-    }
-
-    window.addEventListener('resize', handleResize)
+    window.addEventListener('resize', checkMobile)
 
     return () => {
-      if ('requestIdleCallback' in window) {
-        window.cancelIdleCallback(timer as number)
-      } else {
-        clearTimeout(timer as NodeJS.Timeout)
-      }
-      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('resize', checkMobile)
     }
   }, [])
 
   // URL condicional según el tamaño de pantalla
   const splineUrl = isMobile
     ? "https://prod.spline.design/nwDJJPY243nnG6aM/scene.splinecode" // Mobile
-    : "https://prod.spline.design/I7nVGHVBvrdSDSPs/scene.splinecode" // Desktop
+    : "https://prod.spline.design/dYNHLr92LJwaISpR/scene.splinecode"
+    /* : "https://prod.spline.design/I7nVGHVBvrdSDSPs/scene.splinecode" */ // Desktop
 
   // Estilos condicionales según el tamaño de pantalla
   const splineStyles: React.CSSProperties = isMobile ? {
@@ -108,8 +68,8 @@ export default function SplineScene() {
     zIndex: '1'
   }
 
-  // Mostrar un fondo de respaldo mientras carga
-  if (!isLoaded || isMobile === null) {
+  // Mostrar un fondo de respaldo mientras detecta el tipo de dispositivo
+  if (isMobile === null) {
     return (
       <div className="absolute inset-0 w-full h-full overflow-hidden bg-black">
         {/* Fondo de respaldo con gradiente */}
@@ -118,24 +78,14 @@ export default function SplineScene() {
     )
   }
 
-  // Si el script no cargó, mostrar solo el fondo
-  if (!scriptLoaded) {
-    return (
-      <div className="absolute inset-0 w-full h-full overflow-hidden bg-black">
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-black to-gray-900" />
-      </div>
-    )
-  }
-
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden">
-      {/* Spline Viewer Embebido - Fondo interactivo */}
+      {/* Spline Scene con evento de mouse */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <spline-viewer
-          key={splineUrl}
-          url={splineUrl}
+        <Spline
+          scene={splineUrl}
+          onSplineMouseUp={handleSplineMouseUp}
           style={splineStyles}
-          loading="lazy"
         />
       </div>
 
@@ -146,19 +96,4 @@ export default function SplineScene() {
       />
     </div>
   )
-}
-
-// Declaración de tipos para TypeScript
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'spline-viewer': React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement> & {
-          url?: string
-          style?: React.CSSProperties
-        },
-        HTMLElement
-      >
-    }
-  }
 }

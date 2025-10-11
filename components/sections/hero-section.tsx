@@ -68,16 +68,16 @@ export default function HeroSection() {
       </div>
 
       {/* Botones y contador - Posición más abajo */}
-      <div className={`relative z-30 max-w-4xl mx-auto text-center space-y-4 ${marginBottom} sm:pb-[8rem] sm:mb-20 pointer-events-none`}>
+      <div className={`relative z-30 max-w-4xl mx-auto text-center space-y-4 ${marginBottom} sm:pb-[15rem] sm:mb-20 pointer-events-none`}>
         {/* Botón Liquid Glass Registrarse */}
-        <div className="relative flex justify-center pb-10">
+        {/* <div className="relative flex justify-center pb-10">
           <Link href="/register" className="relative z-50 pointer-events-auto">
             <LiquidGlassButton variant="primary" size="md">
-                {/* <Sparkles className="w-4 sm:h-5 sm:w-5" /> */}
+                <Sparkles className="w-4 sm:h-5 sm:w-5" />
               <GradientText gradient="from-yellow-400 to-red-400 font-neue-power">Registrarse</GradientText>
             </LiquidGlassButton>
           </Link>
-        </div>
+        </div> */}
       </div>
     </section>
   )
