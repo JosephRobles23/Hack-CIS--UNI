@@ -63,7 +63,7 @@ export default function DetailsSection() {
           <div className="text-center transform transition-all duration-700 delay-700 hover:scale-105">
             <div className="text-2xl sm:text-4xl lg:text-5xl mb-2 sm:mb-4">
               <div className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4">
-                <GradientText gradient="from-cyan-400 to-purple-400">120h</GradientText>
+                <GradientText gradient="from-yellow-400 to-orange-400">120h</GradientText>
               </div>
               <p className="text-gray-400 text-xs sm:text-sm lg:text-base">non-stop hacking</p>
             </div>
@@ -78,7 +78,7 @@ export default function DetailsSection() {
           </div>
           <div className="text-center transform transition-all duration-700 delay-900 hover:scale-105">
             <div className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4">
-              <GradientText gradient="from-purple-400 to-pink-400">
+              <GradientText gradient="from-yellow-400 to-orange-400">
                 <AnimatedCounter end={1} />
               </GradientText>
             </div>
