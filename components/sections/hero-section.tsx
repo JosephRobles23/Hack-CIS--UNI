@@ -116,7 +116,7 @@ export default function HeroSection() {
       {/* Botones y contador - Posición más abajo */}
       <div className={`relative z-20 max-w-4xl mx-auto text-center space-y-4 ${marginBottom} ${marginBottomDesktop}`}>
         {/* Botón Liquid Glass Registrarse - Solo Mobile */}
-        <div className="relative flex justify-center  md:hidden">
+        <div className="relative flex justify-center pb-10 md:hidden">
           <Link href="/register" className="relative z-30 pointer-events-auto">
             <LiquidGlassButton variant="primary" size="md">
                 <Sparkles className="w-4 sm:h-5 sm:w-5" />
