@@ -17,11 +17,11 @@ export default function SponsorsSection() {
       logo: "/images/sponsors/Logo-ctic.png",
       website: "https://www.ctic.uni.edu.pe/",
     },
-    /* {
+    {
       name: "Ya Vendió",
-      logo: "/images/sponsors/Logo-Yavendio.png",
-      website: "https://www.yavendio.com/",
-    }, */
+      logo: "/images/sponsors/logo-dsrp.png",
+      website: "https://www.instagram.com/datasciencepe/",
+    },
   ];
 
   const { ref: headerRef, isIntersecting: headerVisible } = useIntersectionObserver()

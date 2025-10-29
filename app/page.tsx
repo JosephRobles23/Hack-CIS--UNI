@@ -20,7 +20,9 @@ const SplineScene = dynamic(() => import("@/components/spline-scene"), {
 
 const SponsorsSection = dynamic(() => import("@/components/sections/sponsors-section"))
 const JudgesSection = dynamic(() => import("@/components/sections/judges-section"))
+const AgendaSection = dynamic(() => import("@/components/sections/agenda-section"))
 const FAQSection = dynamic(() => import("@/components/sections/faq-section"))
+const ProjectSubmissionsSection = dynamic(() => import("@/components/sections/project-submissions-section"))
 const SponsorshipSection = dynamic(() => import("@/components/sections/sponsorship-section"))
 const CTASection = dynamic(() => import("@/components/sections/cta-section"))
 const Footer = dynamic(() => import("@/components/sections/footer"))

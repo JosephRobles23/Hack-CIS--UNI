@@ -27,7 +27,7 @@ export default function ProjectSubmissionsSection() {
               <div className="w-12 h-12 rounded-full bg-purple-400 flex items-center justify-center mb-4">
                 <span className="text-2xl">🎥</span>
               </div>
-              <h3 className="text-2xl font-bold mb-2">Video Demo</h3>
+              <h3 className="text-2xl font-bold mb-2 text-yellow-400">Video Demo</h3>
               <p className="text-gray-400">
                 Máximo 2 minutos, entregado por la plataforma de YouTube. Recuerde que el video debe ser público
               </p>
