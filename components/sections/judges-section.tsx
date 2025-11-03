@@ -31,14 +31,14 @@ const judges = [
   },
   {
     id: "3",
-    name: "Anonimo",
-    title: "Anonimo",
-    handle: "anonimo",
+    name: "Rebeca Flores",
+    title: "AI Product Leader",
+    handle: "rebeca.flores",
     status: "Instagram" as const,
     contactText: "Ver LinkedIn",
-    avatarUrl: "/images/judges/anonimo.webp",
+    avatarUrl: "/images/judges/judge3.webp",
     iconUrl: "/images/card-cis.webp",
-    profileUrl: ''
+    profileUrl: 'https://www.linkedin.com/in/rebeflores/'
   },
   {
     id: "4",

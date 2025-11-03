@@ -20,6 +20,7 @@ const SplineScene = dynamic(() => import("@/components/spline-scene"), {
 
 const SponsorsSection = dynamic(() => import("@/components/sections/sponsors-section"))
 const JudgesSection = dynamic(() => import("@/components/sections/judges-section"))
+const MentorshipsSection = dynamic(() => import("@/components/sections/mentorships-section"))
 const AgendaSection = dynamic(() => import("@/components/sections/agenda-section"))
 const FAQSection = dynamic(() => import("@/components/sections/faq-section"))
 const ProjectSubmissionsSection = dynamic(() => import("@/components/sections/project-submissions-section"))
@@ -69,6 +70,7 @@ export default function HackCISMinimal() {
       </div>
 
       <DetailsSection />
+      <MentorshipsSection />
       <SponsorsSection />
       <JudgesSection />
       <SponsorshipSection />
