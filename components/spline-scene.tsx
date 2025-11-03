@@ -2,17 +2,25 @@
 
 import { useEffect, useState } from "react"
 import Spline from "@splinetool/react-spline";
-import { useRouter } from "next/navigation";
 
 export default function SplineScene() {
   const [isMobile, setIsMobile] = useState<boolean | null>(null)
-  const router = useRouter();
 
   function handleSplineMouseUp(e: any) {
     // Detectamos si el objeto clickeado es el botón
     if (e.target.name === "Button-register") {
-      console.log("🟢 Botón 3D 'Button-register' presionado (Mouse Up)");
-      router.push("/register"); // Navega a la página /register
+      console.log("🟢 Botón 3D 'Button-register' presionado (Mouse Up) - Scrolling to mentorships");
+
+      // Hacer scroll a la sección de mentorías en lugar de redirigir
+      const mentorshipsSection = document.getElementById('mentorships-section')
+      if (mentorshipsSection) {
+        mentorshipsSection.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        })
+      } else {
+        console.log('Mentorships section not found from Spline button!')
+      }
     }
   }
 
@@ -37,7 +45,7 @@ export default function SplineScene() {
   const splineUrl = isMobile
     ? "https://prod.spline.design/nwDJJPY243nnG6aM/scene.splinecode" // Mobile
     : "https://prod.spline.design/dYNHLr92LJwaISpR/scene.splinecode"
-    /* : "https://prod.spline.design/I7nVGHVBvrdSDSPs/scene.splinecode" */ // Desktop
+  /* : "https://prod.spline.design/I7nVGHVBvrdSDSPs/scene.splinecode" */ // Desktop
 
   // Estilos condicionales según el tamaño de pantalla
   const splineStyles: React.CSSProperties = isMobile ? {

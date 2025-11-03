@@ -69,7 +69,10 @@ export default function MentorshipsSection() {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null)
 
   return (
-    <section className="py-12 sm:py-16 md:py-20 lg:py-24 relative overflow-hidden bg-black">
+    <section 
+      id="mentorships-section"
+      className="py-12 sm:py-16 md:py-20 lg:py-24 relative overflow-hidden bg-black"
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
         {/* Header */}
         <div className="text-center mb-12 sm:mb-16">

@@ -1,13 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
 import { Sparkles } from "lucide-react"
 import LiquidGlassButton from "@/components/liquid-glass-button"
 import CountdownTimer from "@/components/countdown-timer"
 import TypewriterText from "@/components/typewriter-text"
 import GradientText from "../gradient-text"
-import NeonButton from "@/components/neon-button"
 
 export default function HeroSection() {
   const [marginBottom, setMarginBottom] = useState("mb-[12rem]")
@@ -117,12 +115,30 @@ export default function HeroSection() {
       <div className={`relative z-20 max-w-4xl mx-auto text-center space-y-4 ${marginBottom} ${marginBottomDesktop}`}>
         {/* Botón Liquid Glass Registrarse - Solo Mobile */}
         <div className="relative flex justify-center pb-10 md:hidden">
-          <Link href="/register" className="relative z-30 pointer-events-auto">
+          <button
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              console.log('Button clicked - scrolling to mentorships section')
+              const mentorshipsSection = document.getElementById('mentorships-section')
+              if (mentorshipsSection) {
+                console.log('Mentorships section found, scrolling...')
+                mentorshipsSection.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'start'
+                })
+              } else {
+                console.log('Mentorships section not found!')
+              }
+            }}
+            type="button"
+            className="relative z-30 pointer-events-auto"
+          >
             <LiquidGlassButton variant="primary" size="md">
-                <Sparkles className="w-4 sm:h-5 sm:w-5" />
+              <Sparkles className="w-4 sm:h-5 sm:w-5" />
               <GradientText gradient="from-yellow-400 to-red-400 font-neue-power">Registrarse</GradientText>
             </LiquidGlassButton>
-          </Link>
+          </button>
         </div>
       </div>
     </section>
