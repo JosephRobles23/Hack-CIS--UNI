@@ -100,7 +100,7 @@ export default function HeroSection() {
       <div className="flex-1 pointer-events-none"></div>
       <div className="relative text-center">
         <p className="text-xs  py-3 font-neue-power md:text-lg text-gray-200 max-w-2xl mx-auto leading-relaxed font-mono font-bold">
-          <TypewriterText text="[CIS HACK] → Deploying the Future in 120H" speed={45} />
+          <TypewriterText text="[CIS HACK] → Time out" speed={45} />
         </p>
       </div>
 
