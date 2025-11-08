@@ -9,18 +9,10 @@ export default function SplineScene() {
   function handleSplineMouseUp(e: any) {
     // Detectamos si el objeto clickeado es el botón
     if (e.target.name === "Button-register") {
-      console.log("🟢 Botón 3D 'Button-register' presionado (Mouse Up) - Scrolling to mentorships");
+      console.log("🟢 Botón 3D 'Button-register' presionado (Mouse Up) - Redirigiendo a submit-project");
 
-      // Hacer scroll a la sección de mentorías en lugar de redirigir
-      const mentorshipsSection = document.getElementById('mentorships-section')
-      if (mentorshipsSection) {
-        mentorshipsSection.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        })
-      } else {
-        console.log('Mentorships section not found from Spline button!')
-      }
+      // Redirigir a la página de submisión de proyectos
+      window.location.href = "/submit-project"
     }
   }
 

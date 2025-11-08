@@ -69,7 +69,7 @@ export default function SuccessModal({ isOpen, onClose, participantName }: Succe
             {/* Mensaje */}
             <div className="space-y-3">
               <p className="text-lg text-gray-300">
-                Te has registrado exitosamente en
+                Haz enviado correctamente tu proyecto de la 
               </p>
               <div className="text-2xl font-bold">
                 <GradientText gradient="from-yellow-400 to-orange-400">
@@ -77,19 +77,19 @@ export default function SuccessModal({ isOpen, onClose, participantName }: Succe
                 </GradientText>
               </div>
               <p className="text-gray-400">
-                ¡Prepárate para 5 días increíbles de innovación y tecnología!
+                ¡Prepárate para el pitch, que comenzará en breve!
               </p>
             </div>
 
             {/* Botones */}
             <div className="space-y-4 pt-4">
-              <Button
+              {/* <Button
                 onClick={handleWhatsAppClick}
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
               >
                 <MessageCircle className="h-5 w-5" />
                 Unirme al grupo de WhatsApp
-              </Button>
+              </Button> */}
 
               <Button
                 onClick={handleGoHome}
